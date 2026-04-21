@@ -28,7 +28,7 @@ export function Navbar() {
             href="#"
             className="text-sm font-medium text-foreground hover:text-primary transition-colors"
           >
-            shlok asawa
+            shlok channawar
           </Link>
           <div className="flex items-center gap-6 sm:gap-8">
             <Link

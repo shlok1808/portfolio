@@ -40,13 +40,17 @@ export function AboutSection() {
           }`}
         >
           <p className="text-foreground/90 leading-relaxed mb-4">
-            I started college as a mechanical engineering major before switching to Applied Data Science at Penn State&apos;s College of IST. That pivot ended up pointing me toward AI research, specifically interpretability and safety, trying to understand what&apos;s actually going on inside these models.
+            I started college as a mechanical engineering major before switching to Applied Data Science at Penn State&apos;s{" "}
+            <a href="https://ist.psu.edu" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">College of IST</a>.
+            {" "}That pivot ended up pointing me toward AI research, specifically interpretability and safety, trying to understand what&apos;s actually going on inside these models.
           </p>
           <p className="text-foreground/90 leading-relaxed mb-4">
-            Currently working on a mechanistic interpretability research project exploring how geometric properties of SAE features predict their steerability in language models. Targeting publication at a major ML workshop.
+            Currently working on a mechanistic interpretability research project exploring how geometric properties of SAE features predict their steerability in language models.
           </p>
           <p className="text-foreground/90 leading-relaxed">
-            Outside of research, I play poker with friends, play chess, listen to a lot of music, and just hang out. Originally from Nagpur, India.
+            Outside of research, I play poker with friends, play{" "}
+            <a href="https://www.chess.com/member/flossyjam" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">chess</a>,
+            {" "}listen to a lot of music, and just hang out. Originally from Nagpur, India.
           </p>
         </div>
       </div>

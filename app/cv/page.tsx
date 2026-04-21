@@ -18,7 +18,8 @@ export default function CVPage() {
             Curriculum Vitae
           </h1>
           <a
-            href="#"
+            href="/resume.pdf"
+            download
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
           >
             <Download className="w-4 h-4" />
@@ -31,40 +32,87 @@ export default function CVPage() {
           <h2 className="text-xl font-semibold text-foreground mb-4 pb-2 border-b border-border">
             Education
           </h2>
-          <div className="space-y-4">
+          <div>
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-medium text-foreground">
+                  B.S. in Applied Data Science
+                </h3>
+                <p className="text-muted-foreground">The Pennsylvania State University</p>
+              </div>
+              <span className="text-sm text-muted-foreground whitespace-nowrap">
+                Expected December 2027
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* Technical Skills */}
+        <section className="mb-10">
+          <h2 className="text-xl font-semibold text-foreground mb-4 pb-2 border-b border-border">
+            Technical Skills
+          </h2>
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p>
+              <span className="text-foreground font-medium">Languages:</span>{" "}
+              Python (Pandas, NumPy, Matplotlib, Seaborn), R, SQL
+            </p>
+            <p>
+              <span className="text-foreground font-medium">Tools &amp; Frameworks:</span>{" "}
+              Git, Jupyter Notebook, Scikit-learn, PyTorch, TensorFlow, APIs, Hugging Face, VS Code
+            </p>
+          </div>
+        </section>
+
+        {/* Research & Projects */}
+        <section className="mb-10">
+          <h2 className="text-xl font-semibold text-foreground mb-4 pb-2 border-b border-border">
+            Research &amp; Projects
+          </h2>
+          <div className="space-y-5">
             <div>
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start gap-4">
                 <div>
                   <h3 className="font-medium text-foreground">
-                    Ph.D. in Computer Science
+                    Research on Mechanistic Interpretability in LLMs
                   </h3>
-                  <p className="text-muted-foreground">Stanford University</p>
+                  <p className="text-sm text-muted-foreground">Python, PyTorch</p>
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  2022 – Present
+                <span className="text-sm text-muted-foreground whitespace-nowrap">
+                  In Progress (Spring 2026)
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                Focus: AI Safety and Interpretability. Advisor: Prof. Jane Doe
-              </p>
+              <ul className="mt-2 space-y-1 text-sm text-muted-foreground list-disc list-inside">
+                <li>Investigating whether geometric properties of SAE decoder vectors can predict feature steerability in LLMs.</li>
+                <li>Designed end-to-end evaluation pipeline over 100 SAE features × 75 prompts × 12 steering magnitudes on Gemma-2-2b-IT.</li>
+                <li>Optimized batched inference to reduce model calls by 94%.</li>
+              </ul>
             </div>
             <div>
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start gap-4">
                 <div>
                   <h3 className="font-medium text-foreground">
-                    B.S. in Computer Science
+                    Stock Price Forecasting Using ML
                   </h3>
-                  <p className="text-muted-foreground">
-                    Massachusetts Institute of Technology
-                  </p>
+                  <p className="text-sm text-muted-foreground">Python, Scikit-learn</p>
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  2018 – 2022
+                <span className="text-sm text-muted-foreground whitespace-nowrap">
+                  July 2025
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                Minor in Cognitive Science. GPA: 4.9/5.0
-              </p>
+            </div>
+            <div>
+              <div className="flex justify-between items-start gap-4">
+                <div>
+                  <h3 className="font-medium text-foreground">
+                    Multi-Asset Financial Portfolio Risk Analysis
+                  </h3>
+                  <p className="text-sm text-muted-foreground">Python</p>
+                </div>
+                <span className="text-sm text-muted-foreground whitespace-nowrap">
+                  June 2025
+                </span>
+              </div>
             </div>
           </div>
         </section>
@@ -72,108 +120,31 @@ export default function CVPage() {
         {/* Experience */}
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-foreground mb-4 pb-2 border-b border-border">
-            Research Experience
+            Experience
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div>
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start gap-4">
                 <div>
-                  <h3 className="font-medium text-foreground">
-                    Research Intern
-                  </h3>
-                  <p className="text-muted-foreground">Anthropic</p>
+                  <h3 className="font-medium text-foreground">Research Assistant</h3>
+                  <p className="text-muted-foreground">Humanitarian Engineering and Social Entrepreneurship</p>
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  Summer 2023
+                <span className="text-sm text-muted-foreground whitespace-nowrap">
+                  Jan 2025 – June 2025
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                Worked on mechanistic interpretability, focusing on understanding
-                feature representations in large language models.
-              </p>
             </div>
             <div>
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start gap-4">
                 <div>
-                  <h3 className="font-medium text-foreground">
-                    Undergraduate Researcher
-                  </h3>
-                  <p className="text-muted-foreground">MIT CSAIL</p>
+                  <h3 className="font-medium text-foreground">Team Member, Commons Desk Operations</h3>
+                  <p className="text-muted-foreground">Penn State</p>
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  2020 – 2022
+                <span className="text-sm text-muted-foreground whitespace-nowrap">
+                  Aug 2024 – Present
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                Research on probing methods for neural network representations.
-              </p>
             </div>
-          </div>
-        </section>
-
-        {/* Publications */}
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-foreground mb-4 pb-2 border-b border-border">
-            Selected Publications
-          </h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-medium text-foreground">
-                Scaling Sparse Autoencoders to GPT-4 Scale Models
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                <span className="text-primary">A. Chen</span>, J. Smith, M.
-                Johnson
-              </p>
-              <p className="text-sm text-muted-foreground">
-                NeurIPS 2024 (Spotlight)
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium text-foreground">
-                Circuit Discovery in Transformer Attention Heads
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                <span className="text-primary">A. Chen</span>, K. Williams
-              </p>
-              <p className="text-sm text-muted-foreground">ICML 2024</p>
-            </div>
-            <div>
-              <h3 className="font-medium text-foreground">
-                Feature Visualization for Language Models
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                <span className="text-primary">A. Chen</span>, L. Davis, R.
-                Brown
-              </p>
-              <p className="text-sm text-muted-foreground">ACL 2023</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Skills */}
-        <section>
-          <h2 className="text-xl font-semibold text-foreground mb-4 pb-2 border-b border-border">
-            Skills
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {[
-              "Python",
-              "PyTorch",
-              "JAX",
-              "Transformer Architectures",
-              "Mechanistic Interpretability",
-              "Sparse Autoencoders",
-              "Distributed Training",
-              "Technical Writing",
-            ].map((skill) => (
-              <span
-                key={skill}
-                className="px-3 py-1.5 text-sm rounded-full bg-secondary text-muted-foreground"
-              >
-                {skill}
-              </span>
-            ))}
           </div>
         </section>
       </div>
