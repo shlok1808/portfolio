@@ -1,1 +1,1 @@
-https://shlok.space
+shlok.space
