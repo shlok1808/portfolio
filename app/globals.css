@@ -5,20 +5,20 @@
 
 :root {
   /* Warm academic palette */
-  --background: #faf7f2;
+  --background: #f7f3eb;
   --foreground: #1a1814;
-  --card: #fdf9f4;
+  --card: #faf6ee;
   --card-foreground: #1a1814;
-  --popover: #fdf9f4;
+  --popover: #faf6ee;
   --popover-foreground: #1a1814;
   --primary: #c4651a;
-  --primary-foreground: #faf7f2;
-  --secondary: #f5f0e8;
+  --primary-foreground: #f7f3eb;
+  --secondary: #f0e9dc;
   --secondary-foreground: #1a1814;
-  --muted: #f5f0e8;
+  --muted: #f0e9dc;
   --muted-foreground: #5c5549;
   --accent: #c4651a;
-  --accent-foreground: #faf7f2;
+  --accent-foreground: #f7f3eb;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: #e8e0d4;
@@ -30,11 +30,11 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.5rem;
-  --sidebar: #faf7f2;
+  --sidebar: #f7f3eb;
   --sidebar-foreground: #1a1814;
   --sidebar-primary: #c4651a;
-  --sidebar-primary-foreground: #faf7f2;
-  --sidebar-accent: #f5f0e8;
+  --sidebar-primary-foreground: #f7f3eb;
+  --sidebar-accent: #f0e9dc;
   --sidebar-accent-foreground: #1a1814;
   --sidebar-border: #e8e0d4;
   --sidebar-ring: #c4651a;
