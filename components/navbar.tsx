@@ -28,9 +28,9 @@ export function Navbar() {
             href="#"
             className="text-sm font-medium text-foreground hover:text-primary transition-colors"
           >
-            alex chen
+            shlok asawa
           </Link>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-6 sm:gap-8">
             <Link
               href="#about"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"

@@ -40,10 +40,13 @@ export function Hero() {
   return (
     <section className="pt-32 pb-16 px-6">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-          <span className="text-primary">Alex</span>{" "}
-          <span className="text-foreground">Chen</span>
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-2">
+          <span className="text-primary">Shlok</span>{" "}
+          <span className="text-foreground">Asawa</span>
         </h1>
+        <p className="text-sm text-muted-foreground mb-4 italic">
+          &quot;sh-loke&quot; — rhymes with cloak
+        </p>
         <p className="text-lg text-muted-foreground mb-6">
           AI Safety Researcher · Interpretability · Mechanistic Understanding
         </p>
