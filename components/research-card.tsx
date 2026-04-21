@@ -13,7 +13,7 @@ interface ResearchCardProps {
 
 export function ResearchCard({ title, description, tags, links }: ResearchCardProps) {
   return (
-    <article className="group p-5 rounded-xl bg-card border border-border hover:border-primary/20 hover:shadow-[0_4px_20px_rgba(196,101,26,0.08)] transition-all duration-300 hover:-translate-y-0.5">
+    <article className="group p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:shadow-[0_4px_20px_rgba(218,119,86,0.12)] transition-all duration-300 hover:-translate-y-0.5">
       <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
         {title}
       </h3>

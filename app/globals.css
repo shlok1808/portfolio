@@ -4,40 +4,40 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Warm academic palette */
-  --background: #f7f3eb;
-  --foreground: #1a1814;
-  --card: #faf6ee;
-  --card-foreground: #1a1814;
-  --popover: #faf6ee;
-  --popover-foreground: #1a1814;
-  --primary: #c4651a;
-  --primary-foreground: #f7f3eb;
-  --secondary: #f0e9dc;
-  --secondary-foreground: #1a1814;
-  --muted: #f0e9dc;
-  --muted-foreground: #5c5549;
-  --accent: #c4651a;
-  --accent-foreground: #f7f3eb;
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: #e8e0d4;
-  --input: #e8e0d4;
-  --ring: #c4651a;
+  /* Claude dark UI palette */
+  --background: #1a1915;
+  --foreground: #e8e4dc;
+  --card: #262521;
+  --card-foreground: #e8e4dc;
+  --popover: #262521;
+  --popover-foreground: #e8e4dc;
+  --primary: #da7756;
+  --primary-foreground: #1a1915;
+  --secondary: #2e2d28;
+  --secondary-foreground: #c4bfb3;
+  --muted: #2e2d28;
+  --muted-foreground: #9b9589;
+  --accent: #da7756;
+  --accent-foreground: #1a1915;
+  --destructive: #c4651a;
+  --destructive-foreground: #e8e4dc;
+  --border: #3a3835;
+  --input: #3a3835;
+  --ring: #da7756;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.5rem;
-  --sidebar: #f7f3eb;
-  --sidebar-foreground: #1a1814;
-  --sidebar-primary: #c4651a;
-  --sidebar-primary-foreground: #f7f3eb;
-  --sidebar-accent: #f0e9dc;
-  --sidebar-accent-foreground: #1a1814;
-  --sidebar-border: #e8e0d4;
-  --sidebar-ring: #c4651a;
+  --sidebar: #1a1915;
+  --sidebar-foreground: #e8e4dc;
+  --sidebar-primary: #da7756;
+  --sidebar-primary-foreground: #1a1915;
+  --sidebar-accent: #2e2d28;
+  --sidebar-accent-foreground: #e8e4dc;
+  --sidebar-border: #3a3835;
+  --sidebar-ring: #da7756;
 }
 
 .dark {

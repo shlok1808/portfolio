@@ -59,7 +59,7 @@ export function Hero() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2.5 rounded-lg bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 hover:shadow-[0_2px_8px_rgba(196,101,26,0.1)] transition-all duration-200"
+              className="p-2.5 rounded-lg bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/30 hover:shadow-[0_2px_8px_rgba(218,119,86,0.15)] transition-all duration-200"
               aria-label={link.name}
             >
               <link.icon className="w-4 h-4" />

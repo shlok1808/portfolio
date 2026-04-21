@@ -30,7 +30,7 @@ export function Navbar() {
           >
             alex chen
           </Link>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-5">
             <Link
               href="#about"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -42,6 +42,18 @@ export function Navbar() {
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               research
+            </Link>
+            <Link
+              href="#blog"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              blog
+            </Link>
+            <Link
+              href="#reading"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              reading
             </Link>
             <Link
               href="/cv"
