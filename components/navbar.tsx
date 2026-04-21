@@ -44,12 +44,6 @@ export function Navbar() {
               research
             </Link>
             <Link
-              href="#blog"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              blog
-            </Link>
-            <Link
               href="#reading"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >

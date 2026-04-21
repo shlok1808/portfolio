@@ -5,45 +5,18 @@ import { ResearchCard } from "./research-card"
 
 const projects = [
   {
-    title: "Scaling Sparse Autoencoders to GPT-4 Scale Models",
+    title: "Predict Before You Steer",
     description:
-      "We trained sparse autoencoders on the residual stream of large language models, discovering interpretable features that explain model behavior. This work enables mechanistic analysis at unprecedented scale.",
-    tags: ["SAE", "Interpretability", "Scaling"],
-    links: {
-      paper: "#",
-      github: "#",
-    },
+      "Working with Algoverse on whether geometric properties of SAE features can predict how steerable they are — before you ever run a steering experiment. We look at neighbor density, co-activation patterns, and an alpha_star metric across GemmaScope features on Gemma-2-2b-IT, evaluated on SALADBench. Targeting the ICML 2026 Mechanistic Interpretability Workshop.",
+    tags: ["SAE", "Mechanistic Interpretability", "In Progress"],
+    links: {},
   },
   {
-    title: "Circuit Discovery in Transformer Attention Heads",
+    title: "Quantization Safety",
     description:
-      "A systematic approach to identifying computational circuits in transformer attention mechanisms. We found recurring motifs that explain how models perform in-context learning.",
-    tags: ["Circuits", "Attention", "Mechanistic"],
-    links: {
-      paper: "#",
-      github: "#",
-      demo: "#",
-    },
-  },
-  {
-    title: "Feature Visualization for Language Models",
-    description:
-      "Adapting computer vision interpretability techniques to understand what language model neurons encode. We develop new methods to visualize and understand learned representations.",
-    tags: ["NLP", "Visualization", "Features"],
-    links: {
-      paper: "#",
-      demo: "#",
-    },
-  },
-  {
-    title: "Probing Emergent Capabilities in LLMs",
-    description:
-      "Investigating when and how emergent capabilities arise during training. We use causal interventions to understand the mechanisms behind sudden capability jumps.",
-    tags: ["Emergence", "Probing", "Training Dynamics"],
-    links: {
-      paper: "#",
-      github: "#",
-    },
+      "With Penn State collaborators. Post-training quantization can quietly degrade a model's safety alignment — we're trying to pin down exactly why. We introduce a V-score diagnostic and identify read-side collapse as the core failure mechanism.",
+    tags: ["Quantization", "Safety Alignment", "In Progress"],
+    links: {},
   },
 ]
 
@@ -79,7 +52,7 @@ export function ResearchSection() {
         >
           Research & Projects
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4">
           {projects.map((project, index) => (
             <div
               key={project.title}
