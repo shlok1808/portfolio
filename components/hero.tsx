@@ -51,7 +51,7 @@ export function Hero() {
           AI Safety &amp; Interpretability
         </p>
         <p className="text-base text-foreground/90 leading-relaxed max-w-2xl mb-8">
-          I&apos;m a junior at Penn State studying Applied Data Science, working on AI interpretability and safety research. Currently focused on understanding how language models represent information internally.
+          I&apos;m a junior at Penn State studying Applied Data Science, working on AI interpretability and safety research. Trying to figure out what&apos;s actually happening inside these models.
         </p>
         <div className="flex items-center gap-3">
           {socialLinks.map((link) => (
