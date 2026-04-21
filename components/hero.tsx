@@ -16,17 +16,17 @@ function GoogleScholarIcon({ className }: { className?: string }) {
 const socialLinks = [
   {
     name: "GitHub",
-    href: "https://github.com",
+    href: "https://github.com/shlok1808",
     icon: Github,
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com",
+    href: "https://www.linkedin.com/in/shlok-channawar/",
     icon: Linkedin,
   },
   {
     name: "Twitter",
-    href: "https://twitter.com",
+    href: "https://x.com/Shlok496665",
     icon: Twitter,
   },
   {
@@ -42,18 +42,16 @@ export function Hero() {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-2">
           <span className="text-primary">Shlok</span>{" "}
-          <span className="text-foreground">Asawa</span>
+          <span className="text-foreground">Channawar</span>
         </h1>
         <p className="text-sm text-muted-foreground mb-4 italic">
-          &quot;sh-loke&quot; — rhymes with cloak
+          &quot;sh-loke&quot; (rhymes with cloak)
         </p>
         <p className="text-lg text-muted-foreground mb-6">
-          AI Safety Researcher · Interpretability · Mechanistic Understanding
+          AI Safety &amp; Interpretability
         </p>
         <p className="text-base text-foreground/90 leading-relaxed max-w-2xl mb-8">
-          I&apos;m a researcher focused on making neural networks more understandable. 
-          Currently exploring sparse autoencoders and circuit-level analysis to uncover 
-          how language models represent and process information.
+          I&apos;m a junior at Penn State studying Applied Data Science, working on AI interpretability and safety research. Currently focused on understanding how language models represent information internally.
         </p>
         <div className="flex items-center gap-3">
           {socialLinks.map((link) => (

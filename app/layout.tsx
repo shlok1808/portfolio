@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Alex Chen | Researcher',
-  description: 'Personal portfolio of Alex Chen — AI Safety researcher focused on interpretability and mechanistic understanding of neural networks.',
+  title: 'Shlok Channawar | AI Safety & Interpretability',
+  description: 'Personal portfolio of Shlok Channawar — AI Safety & Interpretability researcher at Penn State, focused on understanding how language models represent information internally.',
   generator: 'v0.app',
   icons: {
     icon: [

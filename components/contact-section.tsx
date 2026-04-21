@@ -19,26 +19,26 @@ function GoogleScholarIcon({ className }: { className?: string }) {
 const links = [
   {
     name: "Email",
-    href: "mailto:alex@example.com",
-    label: "alex@example.com",
+    href: "mailto:shlokchannawar05@gmail.com",
+    label: "shlokchannawar05@gmail.com",
     icon: Mail,
   },
   {
     name: "GitHub",
-    href: "https://github.com",
-    label: "@alexchen",
+    href: "https://github.com/shlok1808",
+    label: "@shlok1808",
     icon: Github,
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com",
-    label: "Alex Chen",
+    href: "https://www.linkedin.com/in/shlok-channawar/",
+    label: "Shlok Channawar",
     icon: Linkedin,
   },
   {
     name: "Twitter",
-    href: "https://twitter.com",
-    label: "@alexchen_ai",
+    href: "https://x.com/Shlok496665",
+    label: "@Shlok496665",
     icon: Twitter,
   },
   {

@@ -40,22 +40,13 @@ export function AboutSection() {
           }`}
         >
           <p className="text-foreground/90 leading-relaxed mb-4">
-            I&apos;m a PhD student at Stanford working on AI safety and interpretability. 
-            My research focuses on understanding how neural networks work internally — 
-            specifically, I&apos;m interested in reverse-engineering the algorithms that 
-            emerge during training.
+            I started college as a mechanical engineering major before switching to Applied Data Science at Penn State&apos;s College of IST. That pivot ended up pointing me toward AI research, specifically interpretability and safety, trying to understand what&apos;s actually going on inside these models.
           </p>
           <p className="text-foreground/90 leading-relaxed mb-4">
-            Before this, I did my undergrad in computer science at MIT, where I got 
-            interested in the intersection of cognitive science and machine learning. 
-            I spent a summer at Anthropic working on mechanistic interpretability, 
-            which shaped a lot of how I think about these problems today.
+            Currently working on a mechanistic interpretability research project exploring how geometric properties of SAE features predict their steerability in language models. Targeting publication at a major ML workshop.
           </p>
           <p className="text-foreground/90 leading-relaxed">
-            Outside of research, I enjoy reading philosophy (currently working through 
-            some Wittgenstein), hiking in the Bay Area, and making unnecessarily 
-            elaborate pour-over coffee. I also maintain a few open-source tools for 
-            the interpretability community.
+            Outside of research, I play poker with friends, play chess, listen to a lot of music, and just hang out. Originally from Nagpur, India.
           </p>
         </div>
       </div>
