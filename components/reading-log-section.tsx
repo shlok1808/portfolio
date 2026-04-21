@@ -81,7 +81,7 @@ export function ReadingLogSection() {
         <p className="text-muted-foreground mb-8">
           Papers I&apos;ve been reading, with notes on what they do and why they matter.
         </p>
-        <div className="grid gap-4">
+        <div className="grid gap-4 max-h-[700px] overflow-y-auto pr-2 scrollbar-thin">
           {readingLog.map((entry) => (
             <ReadingCard key={entry.title} entry={entry} />
           ))}

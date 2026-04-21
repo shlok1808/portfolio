@@ -56,7 +56,7 @@ export function BlogSection() {
     <section id="blog" className="py-16 px-6">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-bold text-foreground mb-8">Blog</h2>
-        <div className="grid gap-4">
+        <div className="grid gap-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin">
           {blogPosts.map((post) => (
             <BlogCard key={post.slug} post={post} />
           ))}

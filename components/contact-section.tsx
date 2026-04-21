@@ -82,7 +82,7 @@ export function ContactSection() {
           Get in Touch
         </h2>
         <div
-          className={`flex flex-wrap gap-4 ${
+          className={`flex flex-wrap items-center gap-3 ${
             isVisible ? "animate-fade-in-up animate-delay-100" : "opacity-0"
           }`}
         >
@@ -92,7 +92,7 @@ export function ContactSection() {
               href={link.href}
               target={link.name !== "Email" ? "_blank" : undefined}
               rel={link.name !== "Email" ? "noopener noreferrer" : undefined}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-card border border-border text-sm text-muted-foreground hover:text-foreground hover:border-primary/30 hover:shadow-[0_2px_8px_rgba(196,101,26,0.1)] transition-all duration-200"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-card border border-border text-sm text-muted-foreground hover:text-foreground hover:border-primary/30 hover:shadow-[0_2px_8px_rgba(218,119,86,0.12)] transition-all duration-200"
             >
               <link.icon className="w-4 h-4" />
               <span>{link.label}</span>
