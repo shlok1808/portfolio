@@ -30,10 +30,13 @@ function MoonIcon() {
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [isLight, setIsLight] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
+      const total = document.documentElement.scrollHeight - window.innerHeight
+      setScrollProgress(total > 0 ? window.scrollY / total : 0)
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
@@ -59,6 +62,11 @@ export function Navbar() {
   }
 
   return (
+    <>
+      <div
+        className="fixed top-0 left-0 z-[60] h-[2px] bg-primary"
+        style={{ width: `${scrollProgress * 100}%`, transition: 'width 60ms linear' }}
+      />
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
@@ -110,5 +118,6 @@ export function Navbar() {
         </div>
       </div>
     </nav>
+    </>
   )
 }

@@ -1,3 +1,6 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { ExternalLink } from "lucide-react"
 
 interface ReadingEntry {
@@ -36,9 +39,30 @@ const readingLog: ReadingEntry[] = [
   },
 ]
 
+function storageKey(title: string) {
+  return `reading-views-${title.slice(0, 30).toLowerCase().replace(/\s+/g, '-')}`
+}
+
 function ReadingCard({ entry }: { entry: ReadingEntry }) {
+  const key = storageKey(entry.title)
+  const [views, setViews] = useState(0)
+
+  useEffect(() => {
+    const stored = parseInt(localStorage.getItem(key) || '0', 10)
+    setViews(stored)
+  }, [key])
+
+  const handleClick = () => {
+    const next = views + 1
+    setViews(next)
+    localStorage.setItem(key, String(next))
+  }
+
   return (
-    <article className="p-5 rounded-xl bg-card border border-border">
+    <article
+      className="p-5 rounded-xl bg-card border border-border cursor-default"
+      onClick={handleClick}
+    >
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
           <h3 className="text-base font-semibold text-foreground mb-1">
@@ -56,7 +80,7 @@ function ReadingCard({ entry }: { entry: ReadingEntry }) {
           <ExternalLink className="w-4 h-4" />
         </a>
       </div>
-      
+
       <div className="space-y-3 text-sm">
         <div>
           <p className="text-muted-foreground leading-relaxed">{entry.summary}</p>
@@ -68,6 +92,12 @@ function ReadingCard({ entry }: { entry: ReadingEntry }) {
           <p className="text-xs font-medium text-primary/80 uppercase tracking-wide mb-1">My take</p>
           <p className="text-foreground/90 leading-relaxed italic">{entry.myTake}</p>
         </div>
+      </div>
+
+      <div className="mt-3 flex justify-end">
+        <span className="text-xs text-muted-foreground/40">
+          {views} {views === 1 ? 'view' : 'views'}
+        </span>
       </div>
     </article>
   )
