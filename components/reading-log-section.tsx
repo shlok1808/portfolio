@@ -14,28 +14,12 @@ interface ReadingEntry {
 
 const readingLog: ReadingEntry[] = [
   {
-    title: "Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet",
-    authors: "Anthropic, 2024",
-    summary: "This paper extends sparse autoencoders to production-scale language models. They train SAEs on Claude 3 Sonnet's residual stream and find interpretable features spanning abstract concepts, multilingual representations, and even potentially safety-relevant behaviors.",
-    whyItMatters: "It's the first convincing demonstration that SAE-based interpretability can work on frontier models, not just toy systems. The features they find are genuinely surprising and suggest there's real structure to uncover.",
-    myTake: "This changed my research direction. Before reading it, I was skeptical SAEs would scale. Now I think they might be our best shot at understanding large models. The safety-relevant features section is particularly interesting — feels like early hints at something important.",
-    paperUrl: "https://transformer-circuits.pub/2024/scaling-monosemanticity/",
-  },
-  {
-    title: "Attention Is All You Need",
-    authors: "Vaswani et al., 2017",
-    summary: "The paper that introduced the Transformer architecture. They show that self-attention mechanisms alone, without recurrence or convolution, can achieve state-of-the-art results on translation tasks while being more parallelizable and faster to train.",
-    whyItMatters: "This is the foundation of basically everything in modern ML. Understanding how attention works is prerequisite knowledge for any interpretability work. The architectural simplicity is also what makes mechanistic analysis tractable.",
-    myTake: "I re-read this paper every few months and always notice something new. The positional encoding section is more subtle than it first appears. Also, their original model is tiny by today's standards — wild to think about how far things have come.",
-    paperUrl: "https://arxiv.org/abs/1706.03762",
-  },
-  {
-    title: "A Mathematical Framework for Transformer Circuits",
-    authors: "Elhage et al., 2021",
-    summary: "Develops a mathematical framework for understanding how transformers process information. Introduces concepts like the residual stream as a communication channel, attention heads as information movers, and MLPs as feature transformers.",
-    whyItMatters: "This paper basically created the field of mechanistic interpretability as we know it. The conceptual framework it provides — residual streams, composition, etc. — is now standard vocabulary in the field.",
-    myTake: "The best paper I've ever read for building intuition about transformers. I'd recommend it to anyone, even if you think you understand transformers well. The 'how to think about' sections are gold.",
-    paperUrl: "https://transformer-circuits.pub/2021/framework/",
+    title: "Towards Interpretable Protein Structure Prediction with Sparse Autoencoders",
+    authors: "Parsan, Yang, Yang (Reticular / UPenn), 2025",
+    summary: "Scales SAEs to ESM2-3B, the base model underlying ESMFold, enabling mechanistic interpretability of protein structure prediction for the first time. Also introduces Matryoshka SAEs — a hierarchical architecture where nested feature groups capture biology at different scales, from local amino acid patterns to full domain folds.",
+    whyItMatters: "First paper to apply mechanistic interpretability to protein structure prediction. The Swiss-Prot concept evaluation finds 2,677 feature-concept pairs with F1 > 0.5 across 476 biological concepts, showing SAEs scale to non-language domains.",
+    myTake: "The steering case study is the most interesting result — modifying a single hydrophobicity feature at layer 36 changes the predicted 3D structure even when the correct input sequence is provided. Clean causal evidence. The limitation is it's one feature on one protein. The gap between 2,677 interpretable features and one steering demo is real, but for a workshop paper the first result is enough.",
+    paperUrl: "https://arxiv.org/abs/2503.08764",
   },
 ]
 
