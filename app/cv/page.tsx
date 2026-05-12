@@ -18,7 +18,7 @@ export default function CVPage() {
             Curriculum Vitae
           </h1>
           <a
-            href="/resume.pdf"
+            href="/Shlok_Channawar_Resume.pdf"
             download
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
           >
