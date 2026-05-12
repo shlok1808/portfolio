@@ -19,7 +19,7 @@ const readingLog: ReadingEntry[] = [
     summary: "Scales SAEs to ESM2-3B, the base model underlying ESMFold, enabling mechanistic interpretability of protein structure prediction for the first time. Also introduces Matryoshka SAEs — a hierarchical architecture where nested feature groups capture biology at different scales, from local amino acid patterns to full domain folds.",
     whyItMatters: "First paper to apply mechanistic interpretability to protein structure prediction. The Swiss-Prot concept evaluation finds 2,677 feature-concept pairs with F1 > 0.5 across 476 biological concepts, showing SAEs scale to non-language domains.",
     myTake: "The steering case study is the most interesting result, they modified a single hydrophobicity feature at layer 36 changes the predicted 3D structure even when the correct input sequence is provided. Clean causal evidence. The limitation is it's one feature on one protein. The gap between 2,677 interpretable features and one steering demo is real, but for a workshop paper the first result is enough.",
-    paperUrl: "https://arxiv.org/abs/2503.08764",
+    paperUrl: "https://openreview.net/pdf?id=zdOGBRQEbz",
   },
 ]
 
