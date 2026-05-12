@@ -7,7 +7,7 @@ const projects = [
   {
     title: "Predict Before You Steer",
     description:
-      "Working with Algoverse on whether geometric properties of SAE features can predict how steerable they are — before you ever run a steering experiment. We look at neighbor density, co-activation patterns, and an alpha_star metric across GemmaScope features on Gemma-2-2b-IT, evaluated on SALADBench. Targeting the ICML 2026 Mechanistic Interpretability Workshop.",
+      "Working with Algoverse on whether geometric properties of SAE features can predict how steerable they are — before you ever run a steering experiment. We look at neighbor density, co-activation patterns, and an alpha_star metric across features on models such as Gemma, Llama and etc. and evaluated on SALADBench.",
     tags: ["SAE", "Mechanistic Interpretability", "Under Review"],
     links: {},
   },
