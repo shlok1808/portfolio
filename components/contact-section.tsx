@@ -25,8 +25,8 @@ const links = [
   },
   {
     name: "Twitter",
-    href: "https://x.com/Shlok496665",
-    label: "@Shlok496665",
+    href: "https://x.com/shlok_ch",
+    label: "@shlok_ch",
     icon: Twitter,
   },
 ]
