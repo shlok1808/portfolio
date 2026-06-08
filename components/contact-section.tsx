@@ -1,85 +1,49 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { Mail, Github, Linkedin, Twitter } from "lucide-react"
-
+import { Mail, Github, Linkedin, Twitter, ArrowUpRight } from "lucide-react"
+import { useReveal } from "@/hooks/use-reveal"
+import { SectionLabel } from "./section-label"
 
 const links = [
-  {
-    name: "Email",
-    href: "mailto:shlokchannawar05@gmail.com",
-    label: "shlokchannawar05@gmail.com",
-    icon: Mail,
-  },
-  {
-    name: "GitHub",
-    href: "https://github.com/shlok1808",
-    label: "@shlok1808",
-    icon: Github,
-  },
-  {
-    name: "LinkedIn",
-    href: "https://www.linkedin.com/in/shlok-channawar/",
-    label: "Shlok Channawar",
-    icon: Linkedin,
-  },
-  {
-    name: "Twitter",
-    href: "https://x.com/shlok_ch",
-    label: "@shlok_ch",
-    icon: Twitter,
-  },
+  { name: "Email", href: "mailto:shlokchannawar05@gmail.com", label: "shlokchannawar05@gmail.com", icon: Mail },
+  { name: "GitHub", href: "https://github.com/shlok1808", label: "@shlok1808", icon: Github },
+  { name: "LinkedIn", href: "https://www.linkedin.com/in/shlok-channawar/", label: "Shlok Channawar", icon: Linkedin },
+  { name: "Twitter", href: "https://x.com/shlok_ch", label: "@shlok_ch", icon: Twitter },
 ]
 
 export function ContactSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
+  const { ref, visible } = useReveal<HTMLElement>()
 
   return (
-    <section ref={sectionRef} className="py-16 px-6 border-t border-border">
-      <div className="max-w-3xl mx-auto">
-        <h2
-          className={`text-2xl font-bold text-foreground mb-6 ${
-            isVisible ? "animate-fade-in-up" : "opacity-0"
-          }`}
-        >
-          Get in Touch
-        </h2>
-        <div
-          className={`flex flex-nowrap items-center gap-3 ${
-            isVisible ? "animate-fade-in-up animate-delay-100" : "opacity-0"
-          }`}
-        >
-          {links.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              target={link.name !== "Email" ? "_blank" : undefined}
-              rel={link.name !== "Email" ? "noopener noreferrer" : undefined}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-card border border-border text-sm text-muted-foreground hover:text-foreground hover:border-primary/30 hover:shadow-[0_2px_8px_rgba(218,119,86,0.12)] transition-all duration-200"
-            >
-              <link.icon className="w-4 h-4" />
-              <span>{link.label}</span>
-            </a>
-          ))}
+    <section id="contact" ref={ref} className="relative py-24 px-6">
+      <div className="max-w-6xl mx-auto">
+        <SectionLabel index="04">Get in Touch</SectionLabel>
+        <div className={`grid lg:grid-cols-[0.4fr_1fr] gap-8 lg:gap-16 ${visible ? "animate-fade-in-up" : "opacity-0"}`}>
+          <h2 className="font-serif text-3xl sm:text-4xl leading-tight text-foreground text-balance">
+            Always happy to talk interpretability, safety, or anything in between.
+          </h2>
+          <div className="divide-y divide-border border-t border-border">
+            {links.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                target={link.name !== "Email" ? "_blank" : undefined}
+                rel={link.name !== "Email" ? "noopener noreferrer" : undefined}
+                className="group flex items-center justify-between gap-4 py-4"
+              >
+                <div className="flex items-center gap-4">
+                  <link.icon className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
+                  <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground w-20">
+                    {link.name}
+                  </span>
+                  <span className="text-foreground group-hover:text-accent transition-colors">
+                    {link.label}
+                  </span>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>
