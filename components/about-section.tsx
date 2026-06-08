@@ -30,7 +30,7 @@ export function AboutSection() {
             </p>
             <p className="text-base text-foreground/85 leading-relaxed text-pretty">
               Outside of research, I play poker with friends, play{" "}
-              <a href="https://www.chess.com/member/flossyjam" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">chess</a>,
+              <a href="https://www.chess.com/member/andrej_karpathys_hair" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">chess</a>,
               {" "}listen to a lot of music, and just hang out. Originally from Nagpur, India. I also
               love astronomy and astrophotography &mdash; you can see some of my shots{" "}
               <a href="https://www.instagram.com/shlok_astro/" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">here</a>.
