@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useReveal } from "@/hooks/use-reveal"
+import { SectionLabel } from "./section-label"
 import { ResearchCard } from "./research-card"
 
 const projects = [
@@ -21,47 +22,21 @@ const projects = [
 ]
 
 export function ResearchSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
+  const { ref, visible } = useReveal<HTMLElement>()
 
   return (
-    <section id="research" ref={sectionRef} className="py-16 px-6">
-      <div className="max-w-3xl mx-auto">
-        <h2
-          className={`text-2xl font-bold text-foreground mb-8 ${
-            isVisible ? "animate-fade-in-up" : "opacity-0"
-          }`}
-        >
-          Research & Projects
-        </h2>
-        <div className="grid gap-4">
+    <section id="research" ref={ref} className="relative py-24 px-6">
+      <div className="max-w-6xl mx-auto">
+        <SectionLabel index="02">Research &amp; Projects</SectionLabel>
+        <div className={visible ? "animate-fade-in-up" : "opacity-0"}>
           {projects.map((project, index) => (
-            <div
+            <ResearchCard
               key={project.title}
-              className={`${isVisible ? "animate-fade-in-up" : "opacity-0"}`}
-              style={{ animationDelay: `${(index + 1) * 100}ms` }}
-            >
-              <ResearchCard {...project} />
-            </div>
+              index={String(index + 1).padStart(2, "0")}
+              {...project}
+            />
           ))}
+          <div className="border-t border-border" />
         </div>
       </div>
     </section>
