@@ -136,21 +136,21 @@ export function NeuralField({ className }: { className?: string }) {
       ctx.clearRect(0, 0, width, height)
 
       if (!prefersReduced) {
-        // advance + cull waves
-        for (const w of waves) w.pos += w.speed * 0.012
+        // advance + cull waves (slower so the pulse is readable)
+        for (const w of waves) w.pos += w.speed * 0.008
         waves = waves.filter((w) => w.pos < lastLayer + 0.8)
         // spawn new waves periodically
-        spawnTimer += 0.012
-        if (spawnTimer > 1.1) {
+        spawnTimer += 0.008
+        if (spawnTimer > 0.9) {
           spawnTimer = 0
-          waves.push({ pos: -0.6, speed: 0.8 + Math.random() * 0.5 })
+          waves.push({ pos: -0.6, speed: 0.75 + Math.random() * 0.4 })
         }
       }
 
       // update node activations
       for (let i = 0; i < nodes.length; i++) {
-        const target = prefersReduced ? 0.25 : waveAt(nodes[i].layer)
-        activation[i] += (target - activation[i]) * 0.12
+        const target = prefersReduced ? 0.3 : waveAt(nodes[i].layer)
+        activation[i] += (target - activation[i]) * 0.14
       }
 
       // edges
@@ -159,33 +159,33 @@ export function NeuralField({ className }: { className?: string }) {
         const b = nodes[e.b]
         // an edge lights up when the wave sits between its two layers
         const act = Math.min(activation[e.a], activation[e.b])
-        const base = 0.06
+        const base = 0.05
         ctx.beginPath()
         ctx.moveTo(a.x, a.y)
         ctx.lineTo(b.x, b.y)
-        ctx.strokeStyle = `rgba(${fgRgb.r},${fgRgb.g},${fgRgb.b},${base + 0.05 * act})`
+        ctx.strokeStyle = `rgba(${fgRgb.r},${fgRgb.g},${fgRgb.b},${base + 0.04 * act})`
         ctx.lineWidth = 1
         ctx.stroke()
 
         // bright accent overlay on active edges
-        if (act > 0.04) {
+        if (act > 0.03) {
           ctx.beginPath()
           ctx.moveTo(a.x, a.y)
           ctx.lineTo(b.x, b.y)
-          ctx.strokeStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.28 * act})`
-          ctx.lineWidth = 1
+          ctx.strokeStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.55 * act})`
+          ctx.lineWidth = 1.2
           ctx.stroke()
 
           // travelling signal riding the active edge
           if (!prefersReduced) {
-            e.phase += e.speed * 0.04
+            e.phase += e.speed * 0.05
             if (e.phase > 1) e.phase -= 1
             const sx = a.x + (b.x - a.x) * e.phase
             const sy = a.y + (b.y - a.y) * e.phase
             const fade = Math.sin(e.phase * Math.PI)
             ctx.beginPath()
-            ctx.arc(sx, sy, 1.5, 0, Math.PI * 2)
-            ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.6 * fade * act})`
+            ctx.arc(sx, sy, 1.8, 0, Math.PI * 2)
+            ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.85 * fade * act})`
             ctx.fill()
           }
         }
@@ -200,19 +200,24 @@ export function NeuralField({ className }: { className?: string }) {
           n.y = n.baseY + Math.cos(n.pulse * 0.8 + t) * 3
         }
         const act = activation[i]
-        const breathe = 0.5 + 0.5 * Math.sin(n.pulse * 2)
-        const energy = act * 0.85 + breathe * 0.15
+        const energy = Math.pow(act, 0.7)
 
-        // outer halo — swells as the activation wave hits the node
+        // outer glow halo — swells dramatically as the wave hits the node
         ctx.beginPath()
-        ctx.arc(n.x, n.y, 5 + energy * 11, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.04 + energy * 0.12})`
+        ctx.arc(n.x, n.y, 4 + energy * 18, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.02 + energy * 0.22})`
         ctx.fill()
 
-        // core dot
+        // mid ring
         ctx.beginPath()
-        ctx.arc(n.x, n.y, 2.2 + energy * 1.6, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.45 + energy * 0.5})`
+        ctx.arc(n.x, n.y, 3 + energy * 6, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.06 + energy * 0.3})`
+        ctx.fill()
+
+        // core dot — dim at rest, bright when activated
+        ctx.beginPath()
+        ctx.arc(n.x, n.y, 2 + energy * 2, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.3 + energy * 0.7})`
         ctx.fill()
       }
 

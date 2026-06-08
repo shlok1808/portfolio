@@ -29,7 +29,7 @@ export function Hero() {
             <br />
             Channawar
           </h1>
-          <p className="font-serif text-lg sm:text-xl text-foreground/80 leading-relaxed max-w-md mb-9 text-pretty">
+          <p className="text-base sm:text-lg text-foreground/85 leading-relaxed max-w-md mb-9 text-pretty">
             Junior at Penn State studying Applied Data Science. I work on
             interpretability and safety &mdash; trying to figure out what&apos;s
             actually happening inside language models.
