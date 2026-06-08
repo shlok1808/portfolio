@@ -24,18 +24,12 @@ export function Hero() {
       <div className="max-w-6xl mx-auto w-full grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 items-center pt-28 pb-20">
         {/* Left: editorial intro */}
         <div className="animate-fade-in-up">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-accent mb-6">
-            AI Safety &amp; Interpretability
-          </p>
-          <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-tight text-foreground mb-5 text-balance">
+          <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-tight text-foreground mb-8 text-balance">
             Shlok
             <br />
             Channawar
           </h1>
-          <p className="font-mono text-xs text-muted-foreground mb-7">
-            {"/ʃloʊk/"} &mdash; &quot;sh-loke&quot;, rhymes with cloak
-          </p>
-          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-md mb-9 text-pretty">
+          <p className="font-serif text-lg sm:text-xl text-foreground/80 leading-relaxed max-w-md mb-9 text-pretty">
             Junior at Penn State studying Applied Data Science. I work on
             interpretability and safety &mdash; trying to figure out what&apos;s
             actually happening inside language models.

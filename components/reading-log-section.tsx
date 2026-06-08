@@ -107,10 +107,14 @@ export function ReadingLogSection() {
       <div className="max-w-6xl mx-auto">
         <SectionLabel index="03">Reading Log</SectionLabel>
         <div className={`grid lg:grid-cols-[0.4fr_1fr] gap-8 lg:gap-16 ${visible ? "animate-fade-in-up" : "opacity-0"}`}>
-          <p className="text-muted-foreground leading-relaxed max-w-xs text-pretty">
-            Papers I&apos;ve been reading, with notes on what they do and why they matter. Click any
-            entry to expand my notes.
-          </p>
+          <div className="lg:pt-2">
+            <h2 className="font-serif text-2xl sm:text-3xl text-foreground leading-tight text-balance">
+              Papers I&apos;ve been reading
+            </h2>
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70 mt-4 leading-relaxed">
+              Notes on what they do<br className="hidden lg:block" /> and why they matter.<br className="hidden lg:block" /> Click any entry to expand.
+            </p>
+          </div>
           <div>
             {readingLog.map((entry, i) => (
               <ReadingCard key={entry.title} entry={entry} index={String(i + 1).padStart(2, "0")} />

@@ -109,59 +109,116 @@ export function NeuralField({ className }: { className?: string }) {
     const accentRgb = hexToRgb(colors.accent)
     const fgRgb = hexToRgb(colors.fg)
 
+    const lastLayer = layers.length - 1
+
+    // Activation waves sweep left→right through the layers, lighting up
+    // nodes and edges as they pass — like a forward pass propagating through
+    // the network. A new wave is spawned at a gentle cadence.
+    let waves: { pos: number; speed: number }[] = [{ pos: 0, speed: 0.9 }]
+    let spawnTimer = 0
+
+    // Per-node activation level (0..1), eased toward its wave-driven target.
+    const activation = new Float32Array(nodes.length)
+
+    // gaussian falloff of a wave around a given layer
+    function waveAt(layer: number) {
+      let v = 0
+      for (const w of waves) {
+        const d = layer - w.pos
+        v += Math.exp(-(d * d) / 0.18)
+      }
+      return Math.min(1, v)
+    }
+
     let t = 0
-    function frame() {
+    function frame(now: number) {
       t += 0.005
       ctx.clearRect(0, 0, width, height)
+
+      if (!prefersReduced) {
+        // advance + cull waves
+        for (const w of waves) w.pos += w.speed * 0.012
+        waves = waves.filter((w) => w.pos < lastLayer + 0.8)
+        // spawn new waves periodically
+        spawnTimer += 0.012
+        if (spawnTimer > 1.1) {
+          spawnTimer = 0
+          waves.push({ pos: -0.6, speed: 0.8 + Math.random() * 0.5 })
+        }
+      }
+
+      // update node activations
+      for (let i = 0; i < nodes.length; i++) {
+        const target = prefersReduced ? 0.25 : waveAt(nodes[i].layer)
+        activation[i] += (target - activation[i]) * 0.12
+      }
 
       // edges
       for (const e of edges) {
         const a = nodes[e.a]
         const b = nodes[e.b]
+        // an edge lights up when the wave sits between its two layers
+        const act = Math.min(activation[e.a], activation[e.b])
+        const base = 0.06
         ctx.beginPath()
         ctx.moveTo(a.x, a.y)
         ctx.lineTo(b.x, b.y)
-        ctx.strokeStyle = `rgba(${fgRgb.r},${fgRgb.g},${fgRgb.b},0.10)`
+        ctx.strokeStyle = `rgba(${fgRgb.r},${fgRgb.g},${fgRgb.b},${base + 0.05 * act})`
         ctx.lineWidth = 1
         ctx.stroke()
 
-        // travelling signal
-        if (!prefersReduced) {
-          e.phase += e.speed * 0.04
-          if (e.phase > 1) e.phase -= 1
-          const sx = a.x + (b.x - a.x) * e.phase
-          const sy = a.y + (b.y - a.y) * e.phase
-          const fade = Math.sin(e.phase * Math.PI)
+        // bright accent overlay on active edges
+        if (act > 0.04) {
           ctx.beginPath()
-          ctx.arc(sx, sy, 1.4, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.5 * fade})`
-          ctx.fill()
+          ctx.moveTo(a.x, a.y)
+          ctx.lineTo(b.x, b.y)
+          ctx.strokeStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.28 * act})`
+          ctx.lineWidth = 1
+          ctx.stroke()
+
+          // travelling signal riding the active edge
+          if (!prefersReduced) {
+            e.phase += e.speed * 0.04
+            if (e.phase > 1) e.phase -= 1
+            const sx = a.x + (b.x - a.x) * e.phase
+            const sy = a.y + (b.y - a.y) * e.phase
+            const fade = Math.sin(e.phase * Math.PI)
+            ctx.beginPath()
+            ctx.arc(sx, sy, 1.5, 0, Math.PI * 2)
+            ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.6 * fade * act})`
+            ctx.fill()
+          }
         }
       }
 
       // nodes
-      for (const n of nodes) {
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i]
         if (!prefersReduced) {
           n.pulse += 0.01 * n.pulseSpeed
           n.x = n.baseX + Math.sin(n.pulse + t) * 3
           n.y = n.baseY + Math.cos(n.pulse * 0.8 + t) * 3
         }
-        const glow = 0.5 + 0.5 * Math.sin(n.pulse * 2)
+        const act = activation[i]
+        const breathe = 0.5 + 0.5 * Math.sin(n.pulse * 2)
+        const energy = act * 0.85 + breathe * 0.15
 
+        // outer halo — swells as the activation wave hits the node
         ctx.beginPath()
-        ctx.arc(n.x, n.y, 6 + glow * 3, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.05 + glow * 0.06})`
+        ctx.arc(n.x, n.y, 5 + energy * 11, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.04 + energy * 0.12})`
         ctx.fill()
 
+        // core dot
         ctx.beginPath()
-        ctx.arc(n.x, n.y, 2.4, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.55 + glow * 0.4})`
+        ctx.arc(n.x, n.y, 2.2 + energy * 1.6, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},${0.45 + energy * 0.5})`
         ctx.fill()
       }
 
       rafRef.current = requestAnimationFrame(frame)
     }
-    frame()
+    rafRef.current = requestAnimationFrame(frame)
 
     const handleResize = () => resize()
     window.addEventListener("resize", handleResize)
