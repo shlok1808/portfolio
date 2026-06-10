@@ -15,20 +15,23 @@ export function AboutSection() {
             Background
           </div>
           <div className="space-y-5 max-w-2xl">
-            <p className="text-base text-foreground/85 leading-relaxed text-pretty">
+            <p className="font-serif text-[17px] text-foreground/85 leading-relaxed text-pretty">
               I started college as a mechanical engineering major before switching to Applied Data
               Science at Penn State&apos;s{" "}
               <a href="https://ist.psu.edu" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">College of IST</a>.
-              {" "}That pivot pointed me toward AI research &mdash; specifically interpretability and
-              safety, trying to understand what&apos;s actually going on inside these models.
+              {" "}That pivot led me toward AI research &mdash; specifically interpretability and
+              safety, trying to understand what&apos;s actually going on inside language models.
             </p>
-            <p className="text-base text-foreground/85 leading-relaxed text-pretty">
-              Currently working on a mechanistic{" "}
-              <a href="https://www.anthropic.com/research/team/interpretability" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">interpretability</a>
-              {" "}project exploring how geometric properties of SAE features predict their
-              steerability in language models.
+            <p className="font-serif text-[17px] text-foreground/85 leading-relaxed text-pretty">
+              Recently co-first authored a paper on whether geometric properties of SAE decoder vectors
+              can predict feature steerability &mdash; currently in submission. Now working on two new threads: applying
+              interpretability methods to understand how models handle private information, and
+              building practical mech interp tooling for finance. Also attending{" "}
+              <a href="https://bluedot.org" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">BlueDot&apos;s</a>
+              {" "}AI Safety program &mdash; thinking carefully about alignment and what it actually
+              takes to make these systems safe.
             </p>
-            <p className="text-base text-foreground/85 leading-relaxed text-pretty">
+            <p className="font-serif text-[17px] text-foreground/85 leading-relaxed text-pretty">
               Outside of research, I play poker with friends, play{" "}
               <a href="https://www.chess.com/member/andrej_karpathys_hair" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">chess</a>,
               {" "}listen to a lot of music, and just hang out. Originally from Nagpur, India. I also
