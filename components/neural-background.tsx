@@ -61,9 +61,9 @@ interface Palette {
 }
 
 const DARK: Palette = {
-  edge: [186, 181, 154],
-  node: [179, 174, 135],
-  core: [242, 239, 222],
+  edge: [176, 190, 220],
+  node: [168, 187, 224],
+  core: [241, 246, 255],
   additive: true,
   edgeAlpha: 0.13,
   nodeAlpha: 0.8,
@@ -71,9 +71,9 @@ const DARK: Palette = {
 }
 
 const LIGHT: Palette = {
-  edge: [110, 105, 80],
-  node: [108, 104, 69],
-  core: [62, 59, 38],
+  edge: [104, 114, 144],
+  node: [68, 86, 142],
+  core: [28, 36, 60],
   additive: false,
   edgeAlpha: 0.13,
   nodeAlpha: 0.72,

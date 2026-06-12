@@ -1,5 +1,4 @@
 import { Navbar } from "@/components/navbar"
-import { CursorRipple } from "@/components/cursor-ripple"
 import { Hero } from "@/components/hero"
 import { AboutSection } from "@/components/about-section"
 import { ResearchSection } from "@/components/research-section"
@@ -10,7 +9,6 @@ import { Footer } from "@/components/footer"
 export default function Home() {
   return (
     <div className="relative">
-      <CursorRipple />
       <Navbar />
       <main>
         <Hero />

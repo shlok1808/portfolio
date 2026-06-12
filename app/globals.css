@@ -4,75 +4,75 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Dark — warm charcoal with muted sage accent */
-  --background: #151412;
-  --foreground: #e9e5dc;
-  --card: #1c1a17;
-  --card-foreground: #e9e5dc;
-  --popover: #1c1a17;
-  --popover-foreground: #e9e5dc;
-  --primary: #e5e1d6;
-  --primary-foreground: #151412;
-  --secondary: #25231e;
-  --secondary-foreground: #c6c1b4;
-  --muted: #25231e;
-  --muted-foreground: #9d978a;
-  --accent: #b3ae87;
-  --accent-foreground: #151412;
-  --destructive: #a8553f;
-  --destructive-foreground: #e9e5dc;
-  --border: #2c2a24;
-  --input: #2c2a24;
-  --ring: #b3ae87;
-  --grid: #242219;
-  --glow: rgba(179, 174, 135, 0.15);
+  /* Dark — deep ink navy with soft periwinkle accent, bright text */
+  --background: #10141c;
+  --foreground: #f1f3f7;
+  --card: #161b26;
+  --card-foreground: #f1f3f7;
+  --popover: #161b26;
+  --popover-foreground: #f1f3f7;
+  --primary: #eef0f5;
+  --primary-foreground: #10141c;
+  --secondary: #1c2230;
+  --secondary-foreground: #c9cedb;
+  --muted: #1c2230;
+  --muted-foreground: #a4abbd;
+  --accent: #a8bbe0;
+  --accent-foreground: #10141c;
+  --destructive: #b25e5e;
+  --destructive-foreground: #f1f3f7;
+  --border: #232a3a;
+  --input: #232a3a;
+  --ring: #a8bbe0;
+  --grid: #202635;
+  --glow: rgba(168, 187, 224, 0.14);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.25rem;
-  --sidebar: #151412;
-  --sidebar-foreground: #e9e5dc;
-  --sidebar-primary: #b3ae87;
-  --sidebar-primary-foreground: #151412;
-  --sidebar-accent: #25231e;
-  --sidebar-accent-foreground: #e9e5dc;
-  --sidebar-border: #2c2a24;
-  --sidebar-ring: #b3ae87;
+  --sidebar: #10141c;
+  --sidebar-foreground: #f1f3f7;
+  --sidebar-primary: #a8bbe0;
+  --sidebar-primary-foreground: #10141c;
+  --sidebar-accent: #1c2230;
+  --sidebar-accent-foreground: #f1f3f7;
+  --sidebar-border: #232a3a;
+  --sidebar-ring: #a8bbe0;
 }
 
 .light {
-  /* Light — soft stone, warm taupe, muted olive accent */
-  --background: #f2efe8;
-  --foreground: #292621;
-  --card: #f9f7f2;
-  --card-foreground: #292621;
-  --popover: #f9f7f2;
-  --popover-foreground: #292621;
-  --primary: #292621;
-  --primary-foreground: #f2efe8;
-  --secondary: #e7e3d8;
-  --secondary-foreground: #4a463a;
-  --muted: #e7e3d8;
-  --muted-foreground: #837d6e;
-  --accent: #6c6845;
-  --accent-foreground: #f2efe8;
-  --destructive: #99503c;
-  --destructive-foreground: #f2efe8;
-  --border: #dcd6c6;
-  --input: #dcd6c6;
-  --ring: #6c6845;
-  --grid: #d9d3c3;
-  --glow: rgba(108, 104, 69, 0.12);
-  --sidebar: #f2efe8;
-  --sidebar-foreground: #292621;
-  --sidebar-primary: #6c6845;
-  --sidebar-primary-foreground: #f2efe8;
-  --sidebar-accent: #e7e3d8;
-  --sidebar-accent-foreground: #292621;
-  --sidebar-border: #dcd6c6;
-  --sidebar-ring: #6c6845;
+  /* Light — cool paper white with muted indigo accent */
+  --background: #f4f5f8;
+  --foreground: #1b1f29;
+  --card: #fbfcfd;
+  --card-foreground: #1b1f29;
+  --popover: #fbfcfd;
+  --popover-foreground: #1b1f29;
+  --primary: #1b1f29;
+  --primary-foreground: #f4f5f8;
+  --secondary: #e6e9ef;
+  --secondary-foreground: #3c4254;
+  --muted: #e6e9ef;
+  --muted-foreground: #6f7689;
+  --accent: #44568e;
+  --accent-foreground: #f4f5f8;
+  --destructive: #a14a4a;
+  --destructive-foreground: #f4f5f8;
+  --border: #d9dde6;
+  --input: #d9dde6;
+  --ring: #44568e;
+  --grid: #d4d8e2;
+  --glow: rgba(68, 86, 142, 0.1);
+  --sidebar: #f4f5f8;
+  --sidebar-foreground: #1b1f29;
+  --sidebar-primary: #44568e;
+  --sidebar-primary-foreground: #f4f5f8;
+  --sidebar-accent: #e6e9ef;
+  --sidebar-accent-foreground: #1b1f29;
+  --sidebar-border: #d9dde6;
+  --sidebar-ring: #44568e;
 }
 
 @theme inline {
@@ -134,19 +134,6 @@
   ::selection {
     background: color-mix(in srgb, var(--accent) 30%, transparent);
     color: var(--foreground);
-  }
-  /* Faint dotted grid backdrop, Tilde-style */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image: radial-gradient(var(--grid) 1px, transparent 1px);
-    background-size: 56px 56px;
-    background-position: center;
-    mask-image: radial-gradient(ellipse 100% 80% at 50% 40%, #000 55%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 40%, #000 55%, transparent 100%);
   }
 }
 

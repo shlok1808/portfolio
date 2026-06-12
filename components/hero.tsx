@@ -71,7 +71,7 @@ export function Hero() {
           AI Safety &amp; Interpretability · Penn State
         </p>
 
-        <p data-hero-fade className="text-base sm:text-lg text-foreground/85 leading-relaxed max-w-md mb-10 text-pretty">
+        <p data-hero-fade className="text-base sm:text-lg text-foreground/95 leading-relaxed max-w-md mb-10 text-pretty">
           Junior at Penn State studying Applied Data Science. I work on
           interpretability and safety &mdash; trying to figure out what&apos;s
           actually happening inside language models.

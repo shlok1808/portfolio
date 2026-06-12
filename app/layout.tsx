@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Fraunces, Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { JellyGrid } from '@/components/jelly-grid'
 import './globals.css'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
@@ -41,6 +42,7 @@ export default function RootLayout({
         }} />
       </head>
       <body className="font-sans antialiased min-h-screen relative">
+        <JellyGrid />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
