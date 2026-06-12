@@ -1,66 +1,46 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useReveal } from "@/hooks/use-reveal"
+import { SectionLabel } from "./section-label"
 
 export function AboutSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
+  const { ref, visible } = useReveal<HTMLElement>()
 
   return (
-    <section id="about" ref={sectionRef} className="py-16 px-6">
-      <div className="max-w-3xl mx-auto">
-        <h2
-          className={`font-display text-3xl font-medium text-foreground mb-6 ${
-            isVisible ? "animate-fade-in-up" : "opacity-0"
-          }`}
-        >
-          <span className="text-xs font-mono text-primary align-middle mr-3">01</span>
-          About
-        </h2>
-        <div
-          className={`prose prose-neutral max-w-none ${
-            isVisible ? "animate-fade-in-up animate-delay-100" : "opacity-0"
-          }`}
-        >
-          <p className="text-foreground/90 leading-relaxed mb-4">
-            I started college as a mechanical engineering major before switching to Applied Data Science at Penn State&apos;s{" "}
-            <a href="https://ist.psu.edu" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">College of IST</a>.
-            {" "}That pivot ended up pointing me toward AI research, specifically interpretability and safety, trying to understand what&apos;s actually going on inside these models.
-          </p>
-          <p className="text-foreground/90 leading-relaxed mb-4">
-            Currently working on a mechanistic{" "}
-            <a href="https://www.anthropic.com/research/team/interpretability" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">interpretability</a>
-            {" "}research project exploring how geometric properties of SAE features predict their steerability in language models.
-            That paper was accepted to the{" "}
-            <a href="https://mechinterpworkshop.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">ICML 2026 Mechanistic Interpretability Workshop</a>.
-          </p>
-          <p className="text-foreground/90 leading-relaxed">
-            Outside of research, I play poker with friends, play{" "}
-            <a href="https://www.chess.com/member/flossyjam" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">chess</a>,
-            {" "}listen to a lot of music, and just hang out. Originally from Nagpur, India.
-          </p>
-          <p className="text-foreground/90 leading-relaxed">
-            I also love astronomy and astrophotography — you can see some of my shots{" "}
-            <a href="https://www.instagram.com/shlok_astro/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">here</a>.
-          </p>
+    <section id="about" ref={ref} className="relative py-24 px-6">
+      <div className="max-w-6xl mx-auto">
+        <SectionLabel index="01">About</SectionLabel>
+        <div className={`grid lg:grid-cols-[0.4fr_1fr] gap-8 lg:gap-16 ${visible ? "animate-fade-in-up" : "opacity-0"}`}>
+          <div className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground/70 lg:pt-2">
+            Background
+          </div>
+          <div className="space-y-5 max-w-2xl">
+            <p className="font-serif text-[17px] text-foreground/85 leading-relaxed text-pretty">
+              I started college as a mechanical engineering major before switching to Applied Data
+              Science at Penn State&apos;s{" "}
+              <a href="https://ist.psu.edu" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">College of IST</a>.
+              {" "}That pivot led me toward AI research &mdash; specifically interpretability and
+              safety, trying to understand what&apos;s actually going on inside language models.
+            </p>
+            <p className="font-serif text-[17px] text-foreground/85 leading-relaxed text-pretty">
+              Recently co-first authored a paper on whether geometric properties of SAE decoder vectors
+              can predict feature steerability &mdash; accepted to the{" "}
+              <a href="https://mechinterpworkshop.com/" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">ICML 2026 Mechanistic Interpretability Workshop</a>.
+              {" "}Now working on two new threads: applying
+              interpretability methods to understand how models handle private information, and
+              building practical mech interp tooling for finance. Also attending{" "}
+              <a href="https://bluedot.org" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">BlueDot&apos;s</a>
+              {" "}AI Safety program &mdash; thinking carefully about alignment and what it actually
+              takes to make these systems safe.
+            </p>
+            <p className="font-serif text-[17px] text-foreground/85 leading-relaxed text-pretty">
+              Outside of research, I play poker with friends, play{" "}
+              <a href="https://www.chess.com/member/andrej_karpathys_hair" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">chess</a>,
+              {" "}listen to a lot of music, and just hang out. Originally from Nagpur, India. I also
+              love astronomy and astrophotography &mdash; you can see some of my shots{" "}
+              <a href="https://www.instagram.com/shlok_astro/" target="_blank" rel="noopener noreferrer" className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">here</a>.
+            </p>
+          </div>
         </div>
       </div>
     </section>

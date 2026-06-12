@@ -27,6 +27,13 @@ function MoonIcon() {
   )
 }
 
+const navItems = [
+  { label: "about", href: "/#about" },
+  { label: "research", href: "/#research" },
+  { label: "reading", href: "/#reading" },
+  { label: "cv", href: "/cv" },
+]
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [isLight, setIsLight] = useState(false)
@@ -43,70 +50,48 @@ export function Navbar() {
   }, [])
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme')
-    if (saved === 'light') {
-      setIsLight(true)
-    }
+    const saved = localStorage.getItem("theme")
+    if (saved === "light") setIsLight(true)
   }, [])
 
   const toggleTheme = () => {
     const next = !isLight
     setIsLight(next)
     if (next) {
-      document.documentElement.classList.add('light')
-      localStorage.setItem('theme', 'light')
+      document.documentElement.classList.add("light")
+      localStorage.setItem("theme", "light")
     } else {
-      document.documentElement.classList.remove('light')
-      localStorage.setItem('theme', 'dark')
+      document.documentElement.classList.remove("light")
+      localStorage.setItem("theme", "dark")
     }
   }
 
   return (
     <>
       <div
-        className="fixed top-0 left-0 z-[60] h-[2px] bg-primary"
-        style={{ width: `${scrollProgress * 100}%`, transition: 'width 60ms linear' }}
+        className="fixed top-0 left-0 z-[60] h-px bg-accent"
+        style={{ width: `${scrollProgress * 100}%`, transition: "width 60ms linear" }}
       />
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-border shadow-sm"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-3xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <Link
-            href="#"
-            className="font-display italic text-sm sm:text-base whitespace-nowrap text-foreground hover:text-primary transition-colors"
-          >
-            shlok channawar
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled ? "bg-background/70 backdrop-blur-xl border-b border-border" : "bg-transparent"
+        }`}
+      >
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="font-serif text-base text-foreground hover:text-accent transition-colors whitespace-nowrap">
+            <span className="sm:hidden">SC</span>
+            <span className="hidden sm:inline">Shlok Channawar</span>
           </Link>
-          <div className="flex items-center gap-3.5 sm:gap-8">
-            <Link
-              href="#about"
-              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              about
-            </Link>
-            <Link
-              href="#research"
-              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              research
-            </Link>
-            <Link
-              href="#reading"
-              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              reading
-            </Link>
-            <Link
-              href="/cv"
-              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              cv
-            </Link>
+          <div className="flex items-center gap-4 sm:gap-7">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
@@ -116,8 +101,7 @@ export function Navbar() {
             </button>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
     </>
   )
 }

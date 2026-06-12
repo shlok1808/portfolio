@@ -7,6 +7,7 @@ const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 const fraunces = Fraunces({
   subsets: ['latin'],
+  style: ['normal', 'italic'],
   variable: '--font-fraunces',
   axes: ['opsz', 'SOFT'],
 })
@@ -32,14 +33,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${geistMono.variable} ${fraunces.variable} bg-background`}
+      className={`bg-background ${geist.variable} ${geistMono.variable} ${fraunces.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{
           __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light');}catch(e){}})();`
         }} />
       </head>
-      <body className="font-sans antialiased min-h-screen">
+      <body className="font-sans antialiased min-h-screen relative">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

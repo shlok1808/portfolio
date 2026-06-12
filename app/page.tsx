@@ -12,16 +12,18 @@ export default function Home() {
   return (
     <>
       <NeuralBackground />
-      <Navbar />
-      <main className="relative z-10">
-        <Hero />
-        <MilestonesSection />
-        <AboutSection />
-        <ResearchSection />
-        <ReadingLogSection />
-        <ContactSection />
-      </main>
-      <Footer />
+      <div className="relative z-10">
+        <Navbar />
+        <main>
+          <Hero />
+          <MilestonesSection />
+          <AboutSection />
+          <ResearchSection />
+          <ReadingLogSection />
+          <ContactSection />
+        </main>
+        <Footer />
+      </div>
     </>
   )
 }

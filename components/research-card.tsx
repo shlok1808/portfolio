@@ -1,17 +1,18 @@
 "use client"
 
 import { useRef } from "react"
-import { ExternalLink, FileText, Github } from "lucide-react"
+import { ArrowUpRight, Github } from "lucide-react"
 import { emitCardHover } from "./neural-background"
 
 export interface ResearchCardProps {
   id: string
+  index: string
   title: string
   subtitle?: string
-  description: string
   meta?: string
+  description: string
   tags: string[]
-  status?: { label: string; accepted?: boolean }
+  status: { label: string; accepted?: boolean }
   links: {
     paper?: string
     workshop?: string
@@ -22,10 +23,11 @@ export interface ResearchCardProps {
 
 export function ResearchCard({
   id,
+  index,
   title,
   subtitle,
-  description,
   meta,
+  description,
   tags,
   status,
   links,
@@ -41,102 +43,90 @@ export function ResearchCard({
       ref={ref}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="group relative p-6 rounded-xl bg-card/80 backdrop-blur-sm border border-border hover:border-primary/40 hover:shadow-[0_4px_28px_var(--glow)] transition-all duration-300 hover:-translate-y-0.5"
+      className="group relative grid sm:grid-cols-[auto_1fr] gap-4 sm:gap-8 py-8 border-t border-border transition-colors"
     >
-      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 mb-3">
-        <div className="min-w-0">
-          <h3 className="font-display text-xl font-medium text-foreground group-hover:text-primary transition-colors text-balance">
-            {title}
-          </h3>
-          {subtitle && (
-            <p className="text-sm text-muted-foreground italic mt-0.5">{subtitle}</p>
-          )}
-        </div>
-        {status && (
+      <span className="font-mono text-xs text-muted-foreground pt-1.5 group-hover:text-accent transition-colors">
+        {index}
+      </span>
+      <div>
+        <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 mb-3">
+          <div className="min-w-0">
+            <h3 className="font-serif text-2xl sm:text-3xl text-foreground leading-tight group-hover:text-accent transition-colors text-balance">
+              {title}
+            </h3>
+            {subtitle && (
+              <p className="font-serif italic text-base text-muted-foreground mt-1">{subtitle}</p>
+            )}
+          </div>
           <span
-            className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded-full border ${
+            className={`shrink-0 inline-flex items-center gap-1.5 mt-1 font-mono text-[10px] uppercase tracking-[0.15em] px-2.5 py-1 rounded-full border whitespace-nowrap ${
               status.accepted
-                ? "border-primary/35 bg-primary/10 text-primary"
-                : "border-border bg-secondary text-muted-foreground"
+                ? "border-accent/40 bg-accent/10 text-accent"
+                : "border-border text-muted-foreground"
             }`}
           >
-            <span
-              className={`w-1 h-1 rounded-full ${
-                status.accepted ? "bg-primary" : "bg-muted-foreground/60"
-              }`}
-            />
+            {status.accepted && <span className="w-1 h-1 rounded-full bg-accent" />}
             {status.label}
           </span>
-        )}
-      </div>
-
-      {meta && (
-        <p className="text-xs font-mono text-muted-foreground mb-3">{meta}</p>
-      )}
-
-      <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-        {description}
-      </p>
-
-      <div className="flex flex-wrap gap-2 mb-4">
-        {tags.map((tag) => (
-          <span
-            key={tag}
-            className="px-2.5 py-1 text-xs font-medium rounded-full bg-secondary text-secondary-foreground/80"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      {(links.paper || links.workshop || links.github || links.demo) && (
-        <div className="flex flex-wrap items-center gap-4">
-          {links.paper && (
-            <a
-              href={links.paper}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline underline-offset-4"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              Paper (PDF)
-            </a>
-          )}
-          {links.workshop && (
-            <a
-              href={links.workshop}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline underline-offset-4"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              Workshop
-            </a>
-          )}
-          {links.github && (
-            <a
-              href={links.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline underline-offset-4"
-            >
-              <Github className="w-3.5 h-3.5" />
-              Code
-            </a>
-          )}
-          {links.demo && (
-            <a
-              href={links.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline underline-offset-4"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              Demo
-            </a>
-          )}
         </div>
-      )}
+        {meta && (
+          <p className="font-mono text-[11px] text-muted-foreground mb-3">{meta}</p>
+        )}
+        <p className="text-sm text-muted-foreground leading-relaxed mb-5 max-w-2xl text-pretty">
+          {description}
+        </p>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+          <div className="flex flex-wrap gap-x-3 gap-y-1">
+            {tags.map((tag) => (
+              <span key={tag} className="font-mono text-[11px] text-muted-foreground/80">
+                {tag}
+              </span>
+            ))}
+          </div>
+          <div className="flex items-center gap-4 ml-auto">
+            {links.paper && (
+              <a
+                href={links.paper}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-sm text-foreground hover:text-accent transition-colors"
+              >
+                Paper <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {links.workshop && (
+              <a
+                href={links.workshop}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-sm text-foreground hover:text-accent transition-colors"
+              >
+                Workshop <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {links.github && (
+              <a
+                href={links.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-foreground hover:text-accent transition-colors"
+              >
+                <Github className="w-3.5 h-3.5" /> Code
+              </a>
+            )}
+            {links.demo && (
+              <a
+                href={links.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-sm text-foreground hover:text-accent transition-colors"
+              >
+                Demo <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
     </article>
   )
 }
