@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ArrowUpRight, Github, Linkedin, Twitter } from "lucide-react"
+import { NeuralBackground } from "./neural-background"
 
 function GoogleScholarIcon({ className }: { className?: string }) {
   return (
@@ -35,7 +36,8 @@ export function Hero() {
 
   return (
     <section ref={rootRef} className="relative min-h-[100svh] flex items-center px-6">
-      <div className="max-w-6xl mx-auto w-full pt-28 pb-24">
+      <NeuralBackground />
+      <div className="relative z-10 max-w-6xl mx-auto w-full pt-28 pb-24">
         <a
           href="https://mechinterpworkshop.com/"
           target="_blank"
@@ -94,7 +96,7 @@ export function Hero() {
       <a
         href="#milestones"
         data-hero-cue
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        className="absolute z-10 bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         aria-label="Scroll down"
       >
         <span className="font-mono text-[10px] uppercase tracking-[0.2em]">scroll</span>

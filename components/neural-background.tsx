@@ -3,15 +3,14 @@
 import { useEffect, useRef } from "react"
 
 /**
- * Full-viewport neural network background.
+ * Hero-scoped neural network backdrop.
  *
  * - Layered MLP-style graph with activation pulses flowing left → right.
- * - Scroll sweeps a bright "activation band" through the layers, so each
- *   section of the page lights up a different depth of the network.
- * - Hovering a research card (via the `nn-card` CustomEvent) pulls glowing
- *   connection lines from nearby nodes toward that card.
+ * - A slow "activation band" sweeps back and forth through the layers.
  * - Cursor movement emits ripples that physically displace nodes (spring
  *   return), plus a soft aura that follows the pointer.
+ * - Renders only behind the hero (absolute within it) and pauses entirely
+ *   once the hero scrolls out of view.
  */
 
 interface NNode {
@@ -26,7 +25,6 @@ interface NNode {
   phase: number
   act: number
   flash: number
-  hover: number
 }
 
 interface NEdge {
@@ -50,15 +48,6 @@ interface Ripple {
   r: number
   life: number
   strength: number
-}
-
-interface CardLink {
-  key: string
-  el: HTMLElement
-  nodes: number[]
-  progress: number
-  target: number
-  pulses: number[]
 }
 
 interface Palette {
@@ -100,14 +89,17 @@ function qPoint(ax: number, ay: number, cx: number, cy: number, bx: number, by: 
 }
 
 export function NeuralBackground() {
+  const wrapRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
+    const wrapEl = wrapRef.current
     const canvasEl = canvasRef.current
-    if (!canvasEl) return
+    if (!wrapEl || !canvasEl) return
     const context = canvasEl.getContext("2d")
     if (!context) return
     // non-null aliases so nested closures keep the narrowed types
+    const wrap: HTMLDivElement = wrapEl
     const canvas: HTMLCanvasElement = canvasEl
     const ctx: CanvasRenderingContext2D = context
 
@@ -121,21 +113,20 @@ export function NeuralBackground() {
     let outgoing: number[][] = []
     let pulses: Pulse[] = []
     let ripples: Ripple[] = []
-    let links: CardLink[] = []
     let layerCount = 6
     let palette = document.documentElement.classList.contains("light") ? LIGHT : DARK
 
     let raf = 0
     let lastTime = 0
-    let running = true
-    let scrollSmooth = 0
+    let running = false
+    let inView = true
     let lastSpawn = 0
     const mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999, lastRippleAt: 0, lastX: -9999, lastY: -9999 }
 
     function build() {
       dpr = Math.min(window.devicePixelRatio || 1, 2)
-      width = window.innerWidth
-      height = window.innerHeight
+      width = wrap.clientWidth
+      height = wrap.clientHeight
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
       canvas.style.width = `${width}px`
@@ -151,7 +142,6 @@ export function NeuralBackground() {
       edges = []
       pulses = []
       ripples = []
-      links = []
 
       const xMin = width * 0.05
       const xMax = width * 0.95
@@ -173,7 +163,7 @@ export function NeuralBackground() {
             r: 1.6 + Math.random() * 1.6,
             layer: l,
             phase: Math.random() * Math.PI * 2,
-            act: 0, flash: 0, hover: 0,
+            act: 0, flash: 0,
           })
         }
         layerNodes.push(ids)
@@ -219,16 +209,10 @@ export function NeuralBackground() {
       if (ripples.length > 14) ripples.shift()
     }
 
-    function frontierAt(progress: number) {
-      return progress * (layerCount - 1)
-    }
-
     function update(dt: number, now: number) {
-      const doc = document.documentElement
-      const maxScroll = Math.max(doc.scrollHeight - window.innerHeight, 1)
-      const target = Math.min(window.scrollY / maxScroll, 1)
-      scrollSmooth += (target - scrollSmooth) * Math.min(dt * 4, 1)
-      const frontier = frontierAt(scrollSmooth)
+      // slow ping-pong activation sweep through the layers
+      const sweep = (now * 0.00009) % 2
+      const frontier = (sweep < 1 ? sweep : 2 - sweep) * (layerCount - 1)
 
       mouse.sx += (mouse.x - mouse.sx) * Math.min(dt * 8, 1)
       mouse.sy += (mouse.y - mouse.sy) * Math.min(dt * 8, 1)
@@ -240,7 +224,6 @@ export function NeuralBackground() {
         const targetAct = 0.32 + 0.68 * band
         node.act += (targetAct - node.act) * Math.min(dt * 3, 1)
         node.flash = Math.max(0, node.flash - dt * 2.2)
-        node.hover = Math.max(0, node.hover - dt * 2.5)
 
         // spring back to home position after ripple displacement
         node.vx += (node.ox - node.x) * 14 * dt
@@ -297,37 +280,10 @@ export function NeuralBackground() {
         }
       }
       pulses = nextPulses.slice(-60)
-
-      for (const link of links) {
-        link.progress += (link.target - link.progress) * Math.min(dt * 6, 1)
-        if (link.target > 0) {
-          for (const id of link.nodes) nodes[id].hover = 1
-          link.pulses = link.pulses
-            .map((t) => t + dt * 0.9)
-            .filter((t) => t < 1)
-          if (Math.random() < dt * 6) link.pulses.push(0)
-        }
-      }
-      links = links.filter((l) => l.target > 0 || l.progress > 0.02)
-    }
-
-    function cardAnchor(rect: DOMRect, fromX: number, fromY: number) {
-      // point on the card border along the line from the node to card center
-      const cx = rect.left + rect.width / 2
-      const cy = rect.top + rect.height / 2
-      const dx = cx - fromX
-      const dy = cy - fromY
-      const hw = rect.width / 2 - 6
-      const hh = rect.height / 2 - 6
-      const scale = 1 / Math.max(Math.abs(dx) / hw, Math.abs(dy) / hh, 1e-6)
-      return { x: cx - dx * Math.min(scale, 1), y: cy - dy * Math.min(scale, 1) }
     }
 
     function draw(time: number) {
       ctx.clearRect(0, 0, width, height)
-
-      const vh = window.innerHeight
-      const fade = Math.max(0.4, 1 - (window.scrollY / vh) * 0.6)
       ctx.globalCompositeOperation = palette.additive ? "lighter" : "source-over"
 
       const [er, eg, eb] = palette.edge
@@ -337,7 +293,7 @@ export function NeuralBackground() {
       // cursor aura
       if (mouse.sx > -999 && !reduceMotion) {
         const aura = ctx.createRadialGradient(mouse.sx, mouse.sy, 0, mouse.sx, mouse.sy, 260)
-        aura.addColorStop(0, `rgba(${nr},${ng},${nb},${palette.auraAlpha * fade})`)
+        aura.addColorStop(0, `rgba(${nr},${ng},${nb},${palette.auraAlpha})`)
         aura.addColorStop(1, `rgba(${nr},${ng},${nb},0)`)
         ctx.fillStyle = aura
         ctx.fillRect(0, 0, width, height)
@@ -349,7 +305,7 @@ export function NeuralBackground() {
         const a = nodes[edge.a]
         const b = nodes[edge.b]
         const act = Math.min(a.act, b.act)
-        const alpha = (palette.edgeAlpha * (0.45 + 0.55 * act) + edge.glow * 0.22) * fade
+        const alpha = palette.edgeAlpha * (0.45 + 0.55 * act) + edge.glow * 0.22
         ctx.strokeStyle = `rgba(${er},${eg},${eb},${alpha})`
         ctx.beginPath()
         ctx.moveTo(a.x, a.y)
@@ -365,7 +321,7 @@ export function NeuralBackground() {
         for (let k = 0; k < 4; k++) {
           const t = Math.max(0, pulse.t - k * 0.045)
           const p = qPoint(a.x, a.y, edge.cx, edge.cy, b.x, b.y, t)
-          const alpha = (0.55 - k * 0.13) * fade
+          const alpha = 0.55 - k * 0.13
           const radius = 5.5 - k
           const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius)
           grad.addColorStop(0, `rgba(${cr},${cg},${cb},${alpha})`)
@@ -380,82 +336,31 @@ export function NeuralBackground() {
 
       // ripple rings
       for (const ripple of ripples) {
-        ctx.strokeStyle = `rgba(${nr},${ng},${nb},${0.16 * ripple.life * fade})`
+        ctx.strokeStyle = `rgba(${nr},${ng},${nb},${0.16 * ripple.life})`
         ctx.lineWidth = 1.2
         ctx.beginPath()
         ctx.arc(ripple.x, ripple.y, ripple.r, 0, Math.PI * 2)
         ctx.stroke()
       }
 
-      // card connection lines
-      for (const link of links) {
-        if (link.progress < 0.02) continue
-        const rect = link.el.getBoundingClientRect()
-        for (const id of link.nodes) {
-          const node = nodes[id]
-          const anchor = cardAnchor(rect, node.x, node.y)
-          const mx = (node.x + anchor.x) / 2
-          const my = (node.y + anchor.y) / 2
-          const dx = anchor.x - node.x
-          const dy = anchor.y - node.y
-          const len = Math.hypot(dx, dy) || 1
-          const bow = len * 0.14 * (id % 2 === 0 ? 1 : -1)
-          const ctrlX = mx + (-dy / len) * bow
-          const ctrlY = my + (dx / len) * bow
-
-          const steps = 26
-          const drawn = Math.max(2, Math.floor(steps * link.progress))
-          ctx.strokeStyle = `rgba(${nr},${ng},${nb},${0.65 * link.progress})`
-          ctx.lineWidth = 1.4
-          ctx.beginPath()
-          for (let s = 0; s <= drawn; s++) {
-            const p = qPoint(node.x, node.y, ctrlX, ctrlY, anchor.x, anchor.y, s / steps)
-            if (s === 0) ctx.moveTo(p.x, p.y)
-            else ctx.lineTo(p.x, p.y)
-          }
-          ctx.stroke()
-
-          // endpoint dot on the card border
-          if (link.progress > 0.92) {
-            ctx.fillStyle = `rgba(${cr},${cg},${cb},${0.9 * link.progress})`
-            ctx.beginPath()
-            ctx.arc(anchor.x, anchor.y, 2, 0, Math.PI * 2)
-            ctx.fill()
-          }
-
-          // pulses travelling toward the card
-          for (const t of link.pulses) {
-            if (t > link.progress) continue
-            const p = qPoint(node.x, node.y, ctrlX, ctrlY, anchor.x, anchor.y, t)
-            const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 5)
-            grad.addColorStop(0, `rgba(${cr},${cg},${cb},${0.8 * link.progress})`)
-            grad.addColorStop(1, `rgba(${nr},${ng},${nb},0)`)
-            ctx.fillStyle = grad
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, 5, 0, Math.PI * 2)
-            ctx.fill()
-          }
-        }
-      }
-
       // nodes
       for (const node of nodes) {
         const breathe = 0.82 + 0.18 * Math.sin(time * 0.0012 + node.phase)
-        const level = Math.min(1.4, node.act * breathe + node.flash * 0.9 + node.hover * 0.8)
+        const level = Math.min(1.4, node.act * breathe + node.flash * 0.9)
         const glowRadius = node.r * (3 + level * 5)
         const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowRadius)
-        glow.addColorStop(0, `rgba(${nr},${ng},${nb},${0.32 * level * fade})`)
+        glow.addColorStop(0, `rgba(${nr},${ng},${nb},${0.32 * level})`)
         glow.addColorStop(1, `rgba(${nr},${ng},${nb},0)`)
         ctx.fillStyle = glow
         ctx.beginPath()
         ctx.arc(node.x, node.y, glowRadius, 0, Math.PI * 2)
         ctx.fill()
 
-        const coreMix = Math.min(1, node.flash + node.hover)
+        const coreMix = Math.min(1, node.flash)
         const rr = Math.round(nr + (cr - nr) * coreMix)
         const rg = Math.round(ng + (cg - ng) * coreMix)
         const rb = Math.round(nb + (cb - nb) * coreMix)
-        ctx.fillStyle = `rgba(${rr},${rg},${rb},${Math.min(1, palette.nodeAlpha * (0.5 + 0.6 * level)) * fade})`
+        ctx.fillStyle = `rgba(${rr},${rg},${rb},${Math.min(1, palette.nodeAlpha * (0.5 + 0.6 * level))})`
         ctx.beginPath()
         ctx.arc(node.x, node.y, node.r * (1 + 0.45 * level), 0, Math.PI * 2)
         ctx.fill()
@@ -479,57 +384,47 @@ export function NeuralBackground() {
       draw(0)
     }
 
+    function setRunning(next: boolean) {
+      if (next === running) return
+      running = next
+      if (running) {
+        lastTime = 0
+        raf = requestAnimationFrame(loop)
+      } else {
+        cancelAnimationFrame(raf)
+      }
+    }
+
     // --- listeners ---
 
+    const toLocal = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top }
+    }
+
     const onPointerMove = (e: PointerEvent) => {
-      mouse.x = e.clientX
-      mouse.y = e.clientY
-      if (reduceMotion) return
+      const p = toLocal(e)
+      mouse.x = p.x
+      mouse.y = p.y
+      if (reduceMotion || p.y < 0 || p.y > height) return
       const now = performance.now()
-      const moved = Math.hypot(e.clientX - mouse.lastX, e.clientY - mouse.lastY)
+      const moved = Math.hypot(p.x - mouse.lastX, p.y - mouse.lastY)
       if (now - mouse.lastRippleAt > 110 && moved > 26) {
-        addRipple(e.clientX, e.clientY, Math.min(moved / 30, 2.2))
+        addRipple(p.x, p.y, Math.min(moved / 30, 2.2))
         mouse.lastRippleAt = now
-        mouse.lastX = e.clientX
-        mouse.lastY = e.clientY
+        mouse.lastX = p.x
+        mouse.lastY = p.y
       }
     }
 
     const onPointerDown = (e: PointerEvent) => {
-      if (!reduceMotion) addRipple(e.clientX, e.clientY, 3.4)
+      const p = toLocal(e)
+      if (!reduceMotion && p.y >= 0 && p.y <= height) addRipple(p.x, p.y, 3.4)
     }
 
     const onPointerLeave = () => {
       mouse.x = -9999
       mouse.y = -9999
-    }
-
-    const onCardEvent = (e: Event) => {
-      const { key, el, active } = (e as CustomEvent<{ key: string; el: HTMLElement; active: boolean }>).detail
-      const existing = links.find((l) => l.key === key)
-      if (!active) {
-        if (existing) existing.target = 0
-        return
-      }
-      if (existing) {
-        existing.target = 1
-        existing.el = el
-        return
-      }
-      const rect = el.getBoundingClientRect()
-      const cx = rect.left + rect.width / 2
-      const cy = rect.top + rect.height / 2
-      const picked = nodes
-        .map((n, i) => ({ i, d: Math.hypot(n.x - cx, n.y - cy) }))
-        .filter((n) => {
-          const node = nodes[n.i]
-          return node.x < rect.left - 16 || node.x > rect.right + 16 || node.y < rect.top - 16 || node.y > rect.bottom + 16
-        })
-        .sort((p, q) => p.d - q.d)
-        .slice(0, width < 768 ? 4 : 7)
-        .map((n) => n.i)
-      links.push({ key, el, nodes: picked, progress: 0, target: 1, pulses: [0] })
-      if (reduceMotion) drawStatic()
     }
 
     const onResize = () => {
@@ -538,15 +433,20 @@ export function NeuralBackground() {
     }
 
     const onVisibility = () => {
-      if (document.hidden) {
-        running = false
-        cancelAnimationFrame(raf)
-      } else if (!reduceMotion && !running) {
-        running = true
-        lastTime = 0
-        raf = requestAnimationFrame(loop)
-      }
+      if (document.hidden) setRunning(false)
+      else if (!reduceMotion && inView) setRunning(true)
     }
+
+    // pause the loop entirely once the hero scrolls out of view
+    const viewObserver = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting
+        if (reduceMotion) return
+        setRunning(inView && !document.hidden)
+      },
+      { threshold: 0 }
+    )
+    viewObserver.observe(wrap)
 
     const themeObserver = new MutationObserver(() => {
       palette = document.documentElement.classList.contains("light") ? LIGHT : DARK
@@ -554,44 +454,38 @@ export function NeuralBackground() {
     })
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
 
+    const resizeObserver = new ResizeObserver(onResize)
+    resizeObserver.observe(wrap)
+
     build()
     if (reduceMotion) {
       drawStatic()
-      running = false
     } else {
-      raf = requestAnimationFrame(loop)
+      setRunning(true)
     }
 
     window.addEventListener("pointermove", onPointerMove, { passive: true })
     window.addEventListener("pointerdown", onPointerDown, { passive: true })
     document.documentElement.addEventListener("pointerleave", onPointerLeave)
-    window.addEventListener("nn-card", onCardEvent)
-    window.addEventListener("resize", onResize)
-    document.addEventListener("visibilitychange", onVisibility)
 
     return () => {
-      running = false
-      cancelAnimationFrame(raf)
+      setRunning(false)
+      viewObserver.disconnect()
       themeObserver.disconnect()
+      resizeObserver.disconnect()
       window.removeEventListener("pointermove", onPointerMove)
       window.removeEventListener("pointerdown", onPointerDown)
       document.documentElement.removeEventListener("pointerleave", onPointerLeave)
-      window.removeEventListener("nn-card", onCardEvent)
-      window.removeEventListener("resize", onResize)
-      document.removeEventListener("visibilitychange", onVisibility)
     }
   }, [])
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
+      ref={wrapRef}
       aria-hidden="true"
-      className="fixed inset-0 z-0 pointer-events-none"
-    />
+      className="absolute inset-0 z-0 overflow-hidden pointer-events-none [mask-image:linear-gradient(to_bottom,black_72%,transparent)]"
+    >
+      <canvas ref={canvasRef} className="absolute inset-0" />
+    </div>
   )
-}
-
-/** Helper for components that want to activate the network on hover. */
-export function emitCardHover(key: string, el: HTMLElement, active: boolean) {
-  window.dispatchEvent(new CustomEvent("nn-card", { detail: { key, el, active } }))
 }

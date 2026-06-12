@@ -1,5 +1,4 @@
 import { Navbar } from "@/components/navbar"
-import { NeuralBackground } from "@/components/neural-background"
 import { Hero } from "@/components/hero"
 import { MilestonesSection } from "@/components/milestones-section"
 import { AboutSection } from "@/components/about-section"
@@ -10,20 +9,17 @@ import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
-    <>
-      <NeuralBackground />
-      <div className="relative z-10">
-        <Navbar />
-        <main>
-          <Hero />
-          <MilestonesSection />
-          <AboutSection />
-          <ResearchSection />
-          <ReadingLogSection />
-          <ContactSection />
-        </main>
-        <Footer />
-      </div>
-    </>
+    <div className="relative">
+      <Navbar />
+      <main>
+        <Hero />
+        <MilestonesSection />
+        <AboutSection />
+        <ResearchSection />
+        <ReadingLogSection />
+        <ContactSection />
+      </main>
+      <Footer />
+    </div>
   )
 }

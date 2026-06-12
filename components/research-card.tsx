@@ -1,8 +1,6 @@
 "use client"
 
-import { useRef } from "react"
 import { ArrowUpRight, Github } from "lucide-react"
-import { emitCardHover } from "./neural-background"
 
 export interface ResearchCardProps {
   id: string
@@ -22,7 +20,6 @@ export interface ResearchCardProps {
 }
 
 export function ResearchCard({
-  id,
   index,
   title,
   subtitle,
@@ -32,19 +29,8 @@ export function ResearchCard({
   status,
   links,
 }: ResearchCardProps) {
-  const ref = useRef<HTMLElement>(null)
-
-  const setHover = (active: boolean) => {
-    if (ref.current) emitCardHover(id, ref.current, active)
-  }
-
   return (
-    <article
-      ref={ref}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      className="group relative grid sm:grid-cols-[auto_1fr] gap-4 sm:gap-8 py-8 border-t border-border transition-colors"
-    >
+    <article className="group relative grid sm:grid-cols-[auto_1fr] gap-4 sm:gap-8 py-8 border-t border-border transition-colors">
       <span className="font-mono text-xs text-muted-foreground pt-1.5 group-hover:text-accent transition-colors">
         {index}
       </span>
