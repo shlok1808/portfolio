@@ -14,3 +14,8 @@ next.user-config.*
 node_modules
 .next/
 .DS_Store
+# Build artifacts
+tsconfig.tsbuildinfo
+
+# Claude Code local settings
+.claude/settings.local.json

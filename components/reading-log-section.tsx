@@ -107,7 +107,10 @@ export function ReadingLogSection() {
   return (
     <section id="reading" className="py-16 px-6">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Reading Log</h2>
+        <h2 className="font-display text-3xl font-medium text-foreground mb-2">
+          <span className="text-xs font-mono text-primary align-middle mr-3">03</span>
+          Reading Log
+        </h2>
         <p className="text-muted-foreground mb-8">
           Papers I&apos;ve been reading, with notes on what they do and why they matter.
         </p>

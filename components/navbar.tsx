@@ -78,32 +78,32 @@ export function Navbar() {
         <div className="flex items-center justify-between">
           <Link
             href="#"
-            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+            className="font-display italic text-sm sm:text-base whitespace-nowrap text-foreground hover:text-primary transition-colors"
           >
             shlok channawar
           </Link>
-          <div className="flex items-center gap-6 sm:gap-8">
+          <div className="flex items-center gap-3.5 sm:gap-8">
             <Link
               href="#about"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               about
             </Link>
             <Link
               href="#research"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               research
             </Link>
             <Link
               href="#reading"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               reading
             </Link>
             <Link
               href="/cv"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               cv
             </Link>

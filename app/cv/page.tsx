@@ -14,7 +14,7 @@ export default function CVPage() {
         </Link>
 
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-foreground">
+          <h1 className="font-display text-3xl font-medium text-foreground">
             Curriculum Vitae
           </h1>
           <a

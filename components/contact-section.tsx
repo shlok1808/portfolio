@@ -57,14 +57,15 @@ export function ContactSection() {
     <section ref={sectionRef} className="py-16 px-6 border-t border-border">
       <div className="max-w-3xl mx-auto">
         <h2
-          className={`text-2xl font-bold text-foreground mb-6 ${
+          className={`font-display text-3xl font-medium text-foreground mb-6 ${
             isVisible ? "animate-fade-in-up" : "opacity-0"
           }`}
         >
+          <span className="text-xs font-mono text-primary align-middle mr-3">04</span>
           Get in Touch
         </h2>
         <div
-          className={`flex flex-nowrap items-center gap-3 ${
+          className={`flex flex-wrap items-center gap-3 ${
             isVisible ? "animate-fade-in-up animate-delay-100" : "opacity-0"
           }`}
         >

@@ -28,10 +28,11 @@ export function AboutSection() {
     <section id="about" ref={sectionRef} className="py-16 px-6">
       <div className="max-w-3xl mx-auto">
         <h2
-          className={`text-2xl font-bold text-foreground mb-6 ${
+          className={`font-display text-3xl font-medium text-foreground mb-6 ${
             isVisible ? "animate-fade-in-up" : "opacity-0"
           }`}
         >
+          <span className="text-xs font-mono text-primary align-middle mr-3">01</span>
           About
         </h2>
         <div
@@ -48,6 +49,8 @@ export function AboutSection() {
             Currently working on a mechanistic{" "}
             <a href="https://www.anthropic.com/research/team/interpretability" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">interpretability</a>
             {" "}research project exploring how geometric properties of SAE features predict their steerability in language models.
+            That paper was accepted to the{" "}
+            <a href="https://mechinterpworkshop.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">ICML 2026 Mechanistic Interpretability Workshop</a>.
           </p>
           <p className="text-foreground/90 leading-relaxed">
             Outside of research, I play poker with friends, play{" "}

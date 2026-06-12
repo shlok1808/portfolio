@@ -1,21 +1,39 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ResearchCard } from "./research-card"
+import { ResearchCard, type ResearchCardProps } from "./research-card"
 
-const projects = [
+const projects: ResearchCardProps[] = [
   {
-    title: "Predict Before You Steer",
+    id: "steer",
+    title: "Look Before You Steer",
+    subtitle: "Geometry Predicts SAE Feature Steerability",
     description:
-      "Working with Algoverse on whether geometric properties of SAE features can predict how steerable they are — before you ever run a steering experiment. We look at neighbor density, co-activation patterns, and an alpha_star metric across GemmaScope features on Gemma-2-2b-IT, evaluated on SALADBench. Targeting the ICML 2026 Mechanistic Interpretability Workshop.",
-    tags: ["SAE", "Mechanistic Interpretability", "In Progress"],
+      "With Algoverse AI Research: can geometric properties of SAE features predict how steerable they are — before you ever run a steering experiment? We show that decoder-space geometry (neighbor density, max cosine similarity) ranks features by steering cost across Gemma-2 scales, SAE widths, and architectures.",
+    meta: "Algoverse AI Research · 2025 – 2026",
+    tags: ["SAE", "Mechanistic Interpretability", "Python", "PyTorch"],
+    status: { label: "ICML 2026 · Mech Interp Workshop", accepted: true },
+    links: {
+      paper: "/papers/look-before-you-steer.pdf",
+      workshop: "https://mechinterpworkshop.com/",
+    },
+  },
+  {
+    id: "contextual-privacy",
+    title: "Contextual Privacy",
+    subtitle: "NLA Probing for Contextual Integrity",
+    description:
+      "Exploring how language models internally represent contextual privacy norms using Natural Language Autoencoders — and whether models “know” when information sharing violates context-appropriate norms.",
+    meta: "June 2026 – Present",
+    tags: ["Python", "PyTorch", "In Progress"],
     links: {},
   },
   {
-    title: "Quantization Safety",
+    id: "mech-interp-finance",
+    title: "Mechanistic Interpretability for Finance",
     description:
-      "With Penn State collaborators. Post-training quantization can quietly degrade a model's safety alignment — we're trying to pin down exactly why. We introduce a V-score diagnostic and identify read-side collapse as the core failure mechanism.",
-    tags: ["Quantization", "Safety Alignment", "In Progress"],
+      "Applying mechanistic interpretability tools to finance applications.",
+    tags: ["Mechanistic Interpretability", "Exploratory"],
     links: {},
   },
 ]
@@ -46,16 +64,17 @@ export function ResearchSection() {
     <section id="research" ref={sectionRef} className="py-16 px-6">
       <div className="max-w-3xl mx-auto">
         <h2
-          className={`text-2xl font-bold text-foreground mb-8 ${
+          className={`font-display text-3xl font-medium text-foreground mb-8 ${
             isVisible ? "animate-fade-in-up" : "opacity-0"
           }`}
         >
-          Research & Projects
+          <span className="text-xs font-mono text-primary align-middle mr-3">02</span>
+          Research &amp; Projects
         </h2>
         <div className="grid gap-4">
           {projects.map((project, index) => (
             <div
-              key={project.title}
+              key={project.id}
               className={`${isVisible ? "animate-fade-in-up" : "opacity-0"}`}
               style={{ animationDelay: `${(index + 1) * 100}ms` }}
             >
