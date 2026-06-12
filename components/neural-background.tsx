@@ -61,23 +61,23 @@ interface Palette {
 }
 
 const DARK: Palette = {
-  edge: [212, 176, 144],
-  node: [228, 140, 98],
-  core: [255, 226, 204],
+  edge: [186, 181, 154],
+  node: [179, 174, 135],
+  core: [242, 239, 222],
   additive: true,
-  edgeAlpha: 0.14,
-  nodeAlpha: 0.85,
-  auraAlpha: 0.07,
+  edgeAlpha: 0.13,
+  nodeAlpha: 0.8,
+  auraAlpha: 0.06,
 }
 
 const LIGHT: Palette = {
-  edge: [124, 94, 68],
-  node: [180, 78, 40],
-  core: [96, 44, 22],
+  edge: [110, 105, 80],
+  node: [108, 104, 69],
+  core: [62, 59, 38],
   additive: false,
-  edgeAlpha: 0.16,
-  nodeAlpha: 0.8,
-  auraAlpha: 0.05,
+  edgeAlpha: 0.13,
+  nodeAlpha: 0.72,
+  auraAlpha: 0.04,
 }
 
 function qPoint(ax: number, ay: number, cx: number, cy: number, bx: number, by: number, t: number) {
@@ -483,7 +483,7 @@ export function NeuralBackground() {
     <div
       ref={wrapRef}
       aria-hidden="true"
-      className="absolute inset-0 z-0 overflow-hidden pointer-events-none [mask-image:linear-gradient(to_bottom,black_72%,transparent)]"
+      className="absolute inset-0 z-0 overflow-hidden pointer-events-none [mask-composite:intersect] [mask-image:linear-gradient(to_bottom,black_72%,transparent),radial-gradient(ellipse_70%_42%_at_42%_46%,rgba(0,0,0,0.25)_0%,rgba(0,0,0,0.3)_55%,black_100%)] sm:[mask-image:linear-gradient(to_bottom,black_72%,transparent),radial-gradient(ellipse_40%_44%_at_24%_50%,rgba(0,0,0,0.25)_0%,rgba(0,0,0,0.3)_55%,black_100%)]"
     >
       <canvas ref={canvasRef} className="absolute inset-0" />
     </div>
