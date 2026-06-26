@@ -1,23 +1,32 @@
-import { Navbar } from "@/components/navbar"
-import { Hero } from "@/components/hero"
-import { AboutSection } from "@/components/about-section"
-import { ResearchSection } from "@/components/research-section"
-import { ReadingLogSection } from "@/components/reading-log-section"
-import { ContactSection } from "@/components/contact-section"
-import { Footer } from "@/components/footer"
+import { InkCursor } from "@/components/notebook/ink-cursor"
+import { Nav } from "@/components/notebook/nav"
+import { Header } from "@/components/notebook/header"
+import { Current } from "@/components/notebook/current"
+import { Research } from "@/components/notebook/research"
+import { Projects } from "@/components/notebook/projects"
+import { Predictions } from "@/components/notebook/predictions"
+import { Notes } from "@/components/notebook/notes"
+import { Education } from "@/components/notebook/education"
+import { Contact } from "@/components/notebook/contact"
 
 export default function Home() {
   return (
-    <div className="relative">
-      <Navbar />
-      <main>
-        <Hero />
-        <AboutSection />
-        <ResearchSection />
-        <ReadingLogSection />
-        <ContactSection />
-      </main>
-      <Footer />
+    <div className="notebook-paper min-h-screen">
+      <span className="margin-line" aria-hidden="true" />
+      <InkCursor />
+      <div className="mx-auto w-full max-w-3xl px-6 pl-16 sm:pl-20">
+        <Nav />
+        <main>
+          <Header />
+          <Current />
+          <Research />
+          <Projects />
+          <Predictions />
+          <Notes />
+          <Education />
+          <Contact />
+        </main>
+      </div>
     </div>
   )
 }

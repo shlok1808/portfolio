@@ -1,29 +1,15 @@
 import type { Metadata } from 'next'
-import { Fraunces, Geist, Geist_Mono } from 'next/font/google'
+import { Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { JellyGrid } from '@/components/jelly-grid'
 import './globals.css'
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  style: ['normal', 'italic'],
-  variable: '--font-fraunces',
-  axes: ['opsz', 'SOFT'],
-})
 
 export const metadata: Metadata = {
   title: 'shlok channawar',
-  description: 'Personal portfolio of Shlok Channawar — AI Safety & Interpretability researcher at Penn State, focused on understanding how language models represent information internally.',
+  description:
+    'Shlok Channawar — figuring out what is going on inside language models. AI interpretability and safety, Penn State.',
   generator: 'v0.app',
-  icons: {
-    icon: [
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: '/apple-touch-icon.png',
-  },
 }
 
 export default function RootLayout({
@@ -32,17 +18,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      className={`bg-background ${geist.variable} ${geistMono.variable} ${fraunces.variable}`}
-    >
-      <head>
-        <script dangerouslySetInnerHTML={{
-          __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light');}catch(e){}})();`
-        }} />
-      </head>
-      <body className="font-sans antialiased min-h-screen relative">
-        <JellyGrid />
+    <html lang="en" className={`bg-background ${geistMono.variable}`}>
+      <body className="font-mono antialiased min-h-screen relative">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
