@@ -1,10 +1,11 @@
-import { Send, Github, Linkedin, Twitter } from "lucide-react"
+import { Send, Github, Linkedin, Twitter, Crown } from "lucide-react"
 
 const links = [
   { label: "email", value: "shlokchannawar05@gmail.com", href: "mailto:shlokchannawar05@gmail.com", icon: Send },
   { label: "github", value: "github.com/shlok1808", href: "https://github.com/shlok1808", icon: Github },
   { label: "x", value: "x.com/shlok_ch", href: "https://x.com/shlok_ch", icon: Twitter },
   { label: "linkedin", value: "linkedin.com/in/shlok-channawar", href: "https://www.linkedin.com/in/shlok-channawar/", icon: Linkedin },
+  { label: "chess", value: "chess.com/member/andrej_karpathys_hair", href: "https://www.chess.com/member/andrej_karpathys_hair", icon: Crown },
 ]
 
 export function Contact() {

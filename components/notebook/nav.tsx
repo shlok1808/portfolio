@@ -8,6 +8,7 @@ const items = [
   { id: "projects", label: "projects" },
   { id: "predictions", label: "predictions" },
   { id: "notes", label: "notes" },
+  { id: "education", label: "education" },
   { id: "contact", label: "contact" },
 ]
 

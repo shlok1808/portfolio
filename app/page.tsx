@@ -6,6 +6,7 @@ import { Research } from "@/components/notebook/research"
 import { Projects } from "@/components/notebook/projects"
 import { Predictions } from "@/components/notebook/predictions"
 import { Notes } from "@/components/notebook/notes"
+import { Education } from "@/components/notebook/education"
 import { Contact } from "@/components/notebook/contact"
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
           <Projects />
           <Predictions />
           <Notes />
+          <Education />
           <Contact />
         </main>
       </div>

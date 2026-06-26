@@ -2,7 +2,7 @@ const notes = [
   "the inside of a model is more interesting than its outputs",
   "most of research is just asking a better question",
   "you learn the most by trying to break your own results",
-  "pineapple belongs on pizza",
+  "i hate dave's hot chicken",
 ]
 
 export function Notes() {

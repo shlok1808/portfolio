@@ -16,14 +16,6 @@ const roles = [
       "thinking carefully about alignment and what it takes to make models safe",
     ],
   },
-  {
-    org: "Penn State · College of IST",
-    role: "Applied Data Science",
-    meta: "2023 – Present · State College, PA",
-    bullets: [
-      "switched in from mechanical engineering, ended up in AI research",
-    ],
-  },
 ]
 
 export function Research() {

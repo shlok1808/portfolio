@@ -1,6 +1,6 @@
 const items = [
   { text: "junior @ Penn State, applied data science", note: null },
-  { text: "researching mech interp + AI safety", note: "current obsession" },
+  { text: "researching mech interp + AI safety", note: "currently enjoying" },
   { text: "AI safety fellow @ BlueDot", note: null },
   { text: "building interp tooling for finance", note: null },
 ]
@@ -49,9 +49,6 @@ export function Current() {
               className="block h-[300px] w-full object-cover bg-foreground/5"
             />
           </div>
-          <figcaption className="mt-3 italic text-sm text-muted-foreground">
-            (one of my shots — still learning the craft)
-          </figcaption>
         </figure>
       </div>
     </section>
