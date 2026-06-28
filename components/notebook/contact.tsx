@@ -1,4 +1,4 @@
-import { Send, Github, Linkedin, Twitter, Crown } from "lucide-react"
+import { Send, Github, Linkedin, Twitter, Crown, FileText } from "lucide-react"
 
 const links = [
   { label: "email", value: "shlokchannawar05@gmail.com", href: "mailto:shlokchannawar05@gmail.com", icon: Send },
@@ -10,8 +10,8 @@ const links = [
 
 export function Contact() {
   return (
-    <section id="contact" className="py-12 pb-24">
-      <p className="italic text-muted-foreground mb-8">Contact</p>
+    <section id="contact" className="py-20 pb-28">
+      <p className="italic text-muted-foreground mb-10">Contact</p>
 
       <p className="text-muted-foreground mb-8">State College, PA · originally Nagpur, India</p>
 
@@ -30,6 +30,27 @@ export function Contact() {
             </a>
           </div>
         ))}
+
+        <div className="flex items-center gap-4">
+          <span className="w-20 text-sm text-muted-foreground">résumé</span>
+          <FileText className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+          <a
+            href="/Shlok_Channawar_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground transition-colors"
+          >
+            view
+          </a>
+          <span className="text-muted-foreground select-none">·</span>
+          <a
+            href="/Shlok_Channawar_Resume.pdf"
+            download
+            className="text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground transition-colors"
+          >
+            download
+          </a>
+        </div>
       </div>
     </section>
   )

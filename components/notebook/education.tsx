@@ -11,8 +11,8 @@ const schools = [
 
 export function Education() {
   return (
-    <section id="education" className="py-12">
-      <p className="italic text-muted-foreground mb-8">Education</p>
+    <section id="education" className="py-20">
+      <p className="italic text-muted-foreground mb-10">Education</p>
 
       <div className="space-y-10">
         {schools.map((s) => (

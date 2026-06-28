@@ -7,12 +7,12 @@ const items = [
 
 export function Current() {
   return (
-    <section id="current" className="py-12">
-      <p className="italic text-muted-foreground mb-8">Current</p>
+    <section id="current" className="py-20">
+      <p className="italic text-muted-foreground mb-10">Current</p>
 
       <div className="grid gap-10 md:grid-cols-[1fr_auto] md:items-start">
         <div className="max-w-xl">
-          <ul className="space-y-3">
+          <ul className="space-y-4">
             {items.map((item) => (
               <li key={item.text} className="flex items-start gap-3">
                 <span className="text-muted-foreground select-none">—</span>

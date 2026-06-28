@@ -7,10 +7,10 @@ const notes = [
 
 export function Notes() {
   return (
-    <section id="notes" className="py-12">
-      <p className="italic text-muted-foreground mb-8">Notes</p>
+    <section id="notes" className="py-20">
+      <p className="italic text-muted-foreground mb-10">Notes</p>
 
-      <ul className="space-y-3 max-w-2xl border-l border-foreground/20 pl-5">
+      <ul className="space-y-4 max-w-2xl border-l border-foreground/20 pl-5">
         {notes.map((n) => (
           <li key={n} className="flex items-start gap-3">
             <span className="text-muted-foreground select-none">—</span>

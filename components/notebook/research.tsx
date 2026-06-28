@@ -20,8 +20,8 @@ const roles = [
 
 export function Research() {
   return (
-    <section id="research" className="py-12">
-      <p className="italic text-muted-foreground mb-8">Research</p>
+    <section id="research" className="py-20">
+      <p className="italic text-muted-foreground mb-10">Research</p>
 
       <div className="space-y-10">
         {roles.map((r) => (

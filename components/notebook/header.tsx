@@ -8,7 +8,7 @@ const socials = [
 
 export function Header() {
   return (
-    <header className="pt-10 pb-8">
+    <header className="pt-16 pb-10">
       <div className="flex items-start justify-between gap-6">
         <div>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">

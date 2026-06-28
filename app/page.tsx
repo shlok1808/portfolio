@@ -14,7 +14,7 @@ export default function Home() {
     <div className="notebook-paper min-h-screen">
       <span className="margin-line" aria-hidden="true" />
       <InkCursor />
-      <div className="mx-auto w-full max-w-3xl px-6 pl-16 sm:pl-20">
+      <div className="mx-auto w-full max-w-4xl px-6 pl-16 sm:pl-24">
         <Nav />
         <main>
           <Header />

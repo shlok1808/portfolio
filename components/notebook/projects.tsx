@@ -52,21 +52,69 @@ const projects: Project[] = [
   },
 ]
 
+function FavoriteArrow({ className }: { className?: string }) {
+  return (
+    <svg
+      width="36"
+      height="30"
+      viewBox="0 0 36 30"
+      fill="none"
+      aria-hidden="true"
+      className={className}
+    >
+      <path
+        d="M2 27 C 11 23, 19 15, 32 4"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M23 5 L33 3 L31 13"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export function Projects() {
-  const [open, setOpen] = useState<string | null>(projects[0].name)
+  // A Set lets several projects stay open at once — opening one never closes another.
+  const [openSet, setOpenSet] = useState<Set<string>>(
+    () => new Set([projects[0].name]),
+  )
+
+  const toggle = (name: string) =>
+    setOpenSet((prev) => {
+      const next = new Set(prev)
+      if (next.has(name)) next.delete(name)
+      else next.add(name)
+      return next
+    })
 
   return (
-    <section id="projects" className="py-12">
-      <p className="italic text-muted-foreground mb-8">Projects</p>
+    <section id="projects" className="py-20">
+      <p className="italic text-muted-foreground mb-10">Projects</p>
 
-      <div className="border-t border-foreground/15">
+      <div className="border-t border-foreground/15 sm:ml-32">
         {projects.map((p) => {
-          const isOpen = open === p.name
+          const isOpen = openSet.has(p.name)
           return (
-            <div key={p.name} className="border-b border-foreground/15">
+            <div key={p.name} className="relative border-b border-foreground/15">
+              {p.favorite && (
+                <div className="pointer-events-none absolute right-full top-2 mr-4 hidden sm:flex flex-col items-end text-muted-foreground">
+                  <FavoriteArrow className="mr-1" />
+                  <span className="italic text-sm leading-tight text-right">
+                    my
+                    <br />
+                    favorite
+                  </span>
+                </div>
+              )}
               <button
                 type="button"
-                onClick={() => setOpen(isOpen ? null : p.name)}
+                onClick={() => toggle(p.name)}
                 aria-expanded={isOpen}
                 className="flex w-full flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-4 text-left"
               >
@@ -76,7 +124,7 @@ export function Projects() {
                   </span>
                   <span className="font-bold text-foreground">{p.name}</span>
                   {p.favorite && (
-                    <span className="italic text-sm text-muted-foreground">
+                    <span className="italic text-sm text-muted-foreground sm:hidden">
                       ← my favorite
                     </span>
                   )}
