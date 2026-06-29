@@ -77,8 +77,9 @@ export function ConfettiText({ children }: { children: ReactNode }) {
     ctx.clearRect(0, 0, W, H)
 
     for (const p of particlesRef.current) {
-      p.vy += 0.16 // gravity
-      p.vx *= 0.99
+      p.vy += 0.1 // gravity (gentle, so it drifts down slowly)
+      p.vx *= 0.985
+      p.vy *= 0.992
       p.x += p.vx
       p.y += p.vy
       p.rot += p.vrot
@@ -109,22 +110,34 @@ export function ConfettiText({ children }: { children: ReactNode }) {
     runningRef.current = true
 
     const W = window.innerWidth
-    const count = 150
+    const H = window.innerHeight
+    const perSide = 80
     const parts: Particle[] = []
-    for (let i = 0; i < count; i++) {
-      parts.push({
-        x: Math.random() * W,
-        y: -20 - Math.random() * 60,
-        vx: (Math.random() - 0.5) * 7,
-        vy: Math.random() * 3 + 2,
-        rot: Math.random() * Math.PI,
-        vrot: (Math.random() - 0.5) * 0.3,
-        w: 5 + Math.random() * 6,
-        h: 8 + Math.random() * 8,
-        color: COLORS[i % COLORS.length],
-        life: 90 + Math.random() * 50,
-      })
+
+    // Two cannons firing inward from the lower-left and lower-right corners.
+    const cannon = (originX: number, dir: 1 | -1) => {
+      for (let i = 0; i < perSide; i++) {
+        // launch up and inward, between ~25° and ~70° above horizontal
+        const angle = (25 + Math.random() * 45) * (Math.PI / 180)
+        const speed = 8 + Math.random() * 7
+        parts.push({
+          x: originX,
+          y: H * 0.78 + Math.random() * H * 0.18,
+          vx: dir * Math.cos(angle) * speed,
+          vy: -Math.sin(angle) * speed,
+          rot: Math.random() * Math.PI,
+          vrot: (Math.random() - 0.5) * 0.25,
+          w: 5 + Math.random() * 6,
+          h: 8 + Math.random() * 8,
+          color: COLORS[i % COLORS.length],
+          life: 150 + Math.random() * 70,
+        })
+      }
     }
+
+    cannon(-10, 1)
+    cannon(W + 10, -1)
+
     particlesRef.current = parts
     rafRef.current = requestAnimationFrame(tick)
   }, [tick])
@@ -132,7 +145,7 @@ export function ConfettiText({ children }: { children: ReactNode }) {
   return (
     <span
       onMouseEnter={burst}
-      className="box-decoration-clone cursor-default rounded-[2px] bg-[#f8e71c]/45 px-1 transition-colors hover:bg-[#f8e71c]/70"
+      className="box-decoration-clone cursor-default rounded-[2px] bg-[rgba(176,92,74,0.28)] px-1 transition-colors hover:bg-[rgba(176,92,74,0.5)]"
     >
       {children}
     </span>

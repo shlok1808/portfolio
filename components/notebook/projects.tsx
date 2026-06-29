@@ -72,16 +72,16 @@ const projects: Project[] = [
 function FavoriteArrow({ className }: { className?: string }) {
   return (
     <svg
-      width="76"
-      height="44"
-      viewBox="0 0 76 44"
+      width="104"
+      height="46"
+      viewBox="0 0 104 46"
       fill="none"
       aria-hidden="true"
       className={className}
     >
-      {/* hand-drawn loop that sweeps up toward the project */}
+      {/* hand-drawn loop with a long tail that sweeps up toward the project */}
       <path
-        d="M12 34 C 4 32, 4 22, 13 22 C 21 22, 22 33, 13 33 C 6 33, 7 24, 17 20 C 35 12, 52 10, 69 8"
+        d="M12 36 C 4 34, 4 24, 14 24 C 23 24, 24 36, 14 36 C 6 36, 8 25, 19 21 C 45 11, 70 9, 97 7"
         stroke="currentColor"
         strokeWidth="1.3"
         strokeLinecap="round"
@@ -89,7 +89,7 @@ function FavoriteArrow({ className }: { className?: string }) {
       />
       {/* arrowhead pointing up-right at the project name */}
       <path
-        d="M61 4 L71 7 L65 16"
+        d="M89 3 L99 6 L93 15"
         stroke="currentColor"
         strokeWidth="1.3"
         strokeLinecap="round"
