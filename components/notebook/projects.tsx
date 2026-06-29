@@ -31,12 +31,15 @@ const projects: Project[] = [
     stack: "SAEs, Steering, Interpretability",
     bullets: [
       {
-        text: "co-first authored \"Look Before You Steer\", a study of SAE feature steerability",
+        text: "\"Look Before You Steer\" asks whether you can predict how hard an SAE feature is to steer straight from the SAE's own weights, before running a single intervention",
         href: "https://openreview.net/pdf?id=UIaLI9XPpq",
         linkText: "Look Before You Steer",
       },
       {
-        text: "accepted to the ICML 2026 Mechanistic Interpretability Workshop",
+        text: "defines steerability as the smallest coefficient that produces a fixed behavioral change, then shows decoder-space geometry (neighbor density + cosine similarity to nearby features) rank-orders that cost",
+      },
+      {
+        text: "geometry predicts steering cost across Gemma-2, Llama-3.1, and Qwen3 (Spearman ρ up to −0.55, AUROC up to 0.82) — a step toward screening features for controllability before deployment",
       },
     ],
   },
@@ -69,16 +72,16 @@ const projects: Project[] = [
 function FavoriteArrow({ className }: { className?: string }) {
   return (
     <svg
-      width="64"
+      width="76"
       height="44"
-      viewBox="0 0 64 44"
+      viewBox="0 0 76 44"
       fill="none"
       aria-hidden="true"
       className={className}
     >
-      {/* hand-drawn loop-de-loop tail that sweeps up toward the project */}
+      {/* hand-drawn loop that sweeps up toward the project */}
       <path
-        d="M6 40 C 1 28, 15 22, 13 32 C 11 41, 3 37, 9 27 C 16 14, 38 11, 55 9"
+        d="M12 34 C 4 32, 4 22, 13 22 C 21 22, 22 33, 13 33 C 6 33, 7 24, 17 20 C 35 12, 52 10, 69 8"
         stroke="currentColor"
         strokeWidth="1.3"
         strokeLinecap="round"
@@ -86,7 +89,7 @@ function FavoriteArrow({ className }: { className?: string }) {
       />
       {/* arrowhead pointing up-right at the project name */}
       <path
-        d="M47 5 L57 8 L52 17"
+        d="M61 4 L71 7 L65 16"
         stroke="currentColor"
         strokeWidth="1.3"
         strokeLinecap="round"
@@ -120,12 +123,11 @@ export function Projects() {
           return (
             <div key={p.name} className="relative border-b border-foreground/15">
               {p.favorite && (
-                <div className="pointer-events-none absolute right-full top-2 mr-4 hidden sm:flex flex-col items-end text-muted-foreground">
+                <div className="pointer-events-none absolute right-full top-6 mr-4 hidden sm:flex flex-col items-end text-muted-foreground">
                   <FavoriteArrow className="mr-1" />
-                  <span className="italic text-sm leading-tight text-right">
-                    my
-                    <br />
-                    favorite
+                  <span className="italic text-sm leading-relaxed text-right">
+                    <span className="block">my</span>
+                    <span className="block -translate-x-1.5">favorite</span>
                   </span>
                 </div>
               )}

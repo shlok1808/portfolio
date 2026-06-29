@@ -1,4 +1,9 @@
-type Bullet = string | { text: string; href: string; linkText: string }
+import { ConfettiText } from "./confetti-text"
+
+type Bullet =
+  | string
+  | { text: string; href: string; linkText: string }
+  | { text: string; confetti: string }
 
 const roles: { org: string; role: string; meta: string; bullets: Bullet[] }[] = [
   {
@@ -11,7 +16,10 @@ const roles: { org: string; role: string; meta: string; bullets: Bullet[] }[] = 
         href: "https://openreview.net/pdf?id=UIaLI9XPpq",
         linkText: "Look Before You Steer",
       },
-      "accepted to the ICML 2026 Mechanistic Interpretability Workshop",
+      {
+        text: "accepted to the ICML 2026 Mechanistic Interpretability Workshop",
+        confetti: "ICML 2026 Mechanistic Interpretability Workshop",
+      },
     ],
   },
   {
@@ -44,6 +52,12 @@ export function Research() {
                     <span className="text-foreground">
                       {typeof b === "string" ? (
                         b
+                      ) : "confetti" in b ? (
+                        <>
+                          {b.text.split(b.confetti)[0]}
+                          <ConfettiText>{b.confetti}</ConfettiText>
+                          {b.text.split(b.confetti)[1]}
+                        </>
                       ) : (
                         <>
                           {b.text.split(b.linkText)[0]}
