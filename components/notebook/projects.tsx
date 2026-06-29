@@ -27,6 +27,20 @@ const projects: Project[] = [
     ],
   },
   {
+    name: "look-before-you-steer",
+    stack: "SAEs, Steering, Interpretability",
+    bullets: [
+      {
+        text: "co-first authored \"Look Before You Steer\", a study of SAE feature steerability",
+        href: "https://openreview.net/pdf?id=UIaLI9XPpq",
+        linkText: "Look Before You Steer",
+      },
+      {
+        text: "accepted to the ICML 2026 Mechanistic Interpretability Workshop",
+      },
+    ],
+  },
+  {
     name: "mechanistic-kyc",
     stack: "Python, Interpretability",
     bullets: [
@@ -55,23 +69,26 @@ const projects: Project[] = [
 function FavoriteArrow({ className }: { className?: string }) {
   return (
     <svg
-      width="36"
-      height="30"
-      viewBox="0 0 36 30"
+      width="64"
+      height="44"
+      viewBox="0 0 64 44"
       fill="none"
       aria-hidden="true"
       className={className}
     >
+      {/* hand-drawn loop-de-loop tail that sweeps up toward the project */}
       <path
-        d="M2 27 C 11 23, 19 15, 32 4"
+        d="M6 40 C 1 28, 15 22, 13 32 C 11 41, 3 37, 9 27 C 16 14, 38 11, 55 9"
         stroke="currentColor"
-        strokeWidth="1.2"
+        strokeWidth="1.3"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
+      {/* arrowhead pointing up-right at the project name */}
       <path
-        d="M23 5 L33 3 L31 13"
+        d="M47 5 L57 8 L52 17"
         stroke="currentColor"
-        strokeWidth="1.2"
+        strokeWidth="1.3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

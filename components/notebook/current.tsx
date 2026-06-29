@@ -35,8 +35,7 @@ export function Current() {
           </p>
         </div>
 
-        {/* Polaroid — swap the img src with your astrophotography shot
-            (drop a file in /public and update the path below). */}
+        {/* Polaroid — my Orion Nebula astrophotography shot. */}
         <figure className="relative mx-auto md:mx-0 w-[260px] rotate-2">
           <span
             aria-hidden="true"
@@ -44,8 +43,8 @@ export function Current() {
           />
           <div className="bg-[#fbfaf6] p-3 pb-12 shadow-sm border border-foreground/10">
             <img
-              src="/placeholder.svg?height=300&width=240"
-              alt="One of my astrophotography shots"
+              src="/orion-nebula.jpg"
+              alt="The Orion Nebula — one of my astrophotography shots"
               className="block h-[300px] w-full object-cover bg-foreground/5"
             />
           </div>

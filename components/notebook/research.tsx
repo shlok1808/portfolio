@@ -1,10 +1,16 @@
-const roles = [
+type Bullet = string | { text: string; href: string; linkText: string }
+
+const roles: { org: string; role: string; meta: string; bullets: Bullet[] }[] = [
   {
     org: "Algoverse AI Research",
     role: "AI Researcher",
     meta: "2025 – 2026 · Remote",
     bullets: [
-      "co-first authored \"Look Before You Steer\" on SAE feature steerability",
+      {
+        text: "co-first authored \"Look Before You Steer\" on SAE feature steerability",
+        href: "https://openreview.net/pdf?id=UIaLI9XPpq",
+        linkText: "Look Before You Steer",
+      },
       "accepted to the ICML 2026 Mechanistic Interpretability Workshop",
     ],
   },
@@ -30,12 +36,32 @@ export function Research() {
             <p className="text-foreground">{r.role}</p>
             <p className="text-sm text-muted-foreground mt-1">{r.meta}</p>
             <ul className="mt-3 space-y-2">
-              {r.bullets.map((b) => (
-                <li key={b} className="flex items-start gap-3">
-                  <span className="text-muted-foreground select-none">—</span>
-                  <span className="text-foreground">{b}</span>
-                </li>
-              ))}
+              {r.bullets.map((b) => {
+                const text = typeof b === "string" ? b : b.text
+                return (
+                  <li key={text} className="flex items-start gap-3">
+                    <span className="text-muted-foreground select-none">—</span>
+                    <span className="text-foreground">
+                      {typeof b === "string" ? (
+                        b
+                      ) : (
+                        <>
+                          {b.text.split(b.linkText)[0]}
+                          <a
+                            href={b.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground transition-colors"
+                          >
+                            {b.linkText}
+                          </a>
+                          {b.text.split(b.linkText)[1]}
+                        </>
+                      )}
+                    </span>
+                  </li>
+                )
+              })}
             </ul>
           </div>
         ))}
