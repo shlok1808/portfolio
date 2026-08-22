@@ -1,7 +1,7 @@
 // Add your own predictions here — one line each.
 const predictions = [
-  "we'll understand a frontier model's internals before we can fully control them",
-  "interpretability becomes a standard part of every serious safety case by 2030",
+  "the models we call \"aligned\" are just the ones we haven't looked at closely enough yet",
+  "SAEs are a stepping stone, not the answer — something less lossy replaces them before 2028",
 ]
 
 export function Predictions() {

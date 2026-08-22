@@ -1,6 +1,7 @@
-import { Github, Linkedin, Send } from "lucide-react"
+import { FileText, Github, Linkedin, Send } from "lucide-react"
 
 const socials = [
+  { name: "Resume", href: "/Shlok_Channawar_Resume.pdf", icon: FileText },
   { name: "GitHub", href: "https://github.com/shlok1808", icon: Github },
   { name: "LinkedIn", href: "https://www.linkedin.com/in/shlok-channawar/", icon: Linkedin },
   { name: "Email", href: "mailto:shlokchannawar05@gmail.com", icon: Send },

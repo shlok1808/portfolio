@@ -20,6 +20,10 @@ const roles: { org: string; role: string; meta: string; bullets: Bullet[] }[] = 
         text: "accepted to the ICML 2026 Mechanistic Interpretability Workshop",
         confetti: "ICML 2026 Mechanistic Interpretability Workshop",
       },
+      {
+        text: "accepted to the COLM 2026 Actionable Interpretability Workshop",
+        confetti: "COLM 2026 Actionable Interpretability Workshop",
+      },
     ],
   },
   {
