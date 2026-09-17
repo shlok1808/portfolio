@@ -20,16 +20,22 @@ export default function Home() {
       <section id="about" className="prose">
         <h2 className="label">About</h2>
         <p>
-          I was studying engineering when I watched one of Neel Nanda’s videos on mechanistic
-          interpretability, and it moved me enough to switch my major to data science.
+          I was studying engineering when I watched one of Neel Nanda’s videos on{' '}
+          <a
+            href="https://www.anthropic.com/research/team/interpretability"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            mechanistic interpretability
+          </a>
+          , and it moved me enough to switch my major to data science.
         </p>
         <p>
           The questions I keep circling: how do we decode activations into language we can actually
           trust, when today’s methods hallucinate or read out little more than a bag of words? How do
           we get from knowing what a model represents to showing that representation caused what it
           did? What does it take to probe for something a model never says out loud — deception, or
-          the sense that it’s being watched? And why does training on one thing sometimes generalize
-          somewhere strange?
+          the sense that it’s being watched?
         </p>
         <p>
           I’m currently working with{' '}

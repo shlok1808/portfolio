@@ -1,13 +1,13 @@
 @import 'tailwindcss';
 
-/* Fallback set (slate, light) — also what renders if scripting is off. */
+/* Fallback set (moss, light) — also what renders if scripting is off. */
 :root {
-  --ground: #f1f1f0;
-  --ink: #1f2224;
-  --muted: #6e7275;
-  --rule: #dbdbd9;
-  --accent: #35576e;
-  --accent-strong: #244152;
+  --ground: #f0f2ee;
+  --ink: #1b211b;
+  --muted: #6a716a;
+  --rule: #daded8;
+  --accent: #2f5140;
+  --accent-strong: #1f3a2c;
   --radius: 0.25rem;
   color-scheme: light;
 }

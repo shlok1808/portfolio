@@ -15,12 +15,12 @@ const PALETTES = [
 
 export function PaletteSwitcher() {
   // Mirrors whatever the pre-paint script in layout.tsx already put on <html>.
-  const [palette, setPalette] = useState('slate')
+  const [palette, setPalette] = useState('moss')
   const [mode, setMode] = useState<'light' | 'dark'>('light')
 
   useEffect(() => {
     const root = document.documentElement
-    setPalette(root.getAttribute('data-palette') ?? 'slate')
+    setPalette(root.getAttribute('data-palette') ?? 'moss')
     setMode(root.getAttribute('data-mode') === 'dark' ? 'dark' : 'light')
   }, [])
 
