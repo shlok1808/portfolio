@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Newsreader } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { SmoothScroll } from '@/components/smooth-scroll'
 import './globals.css'
 
 const newsreader = Newsreader({
@@ -17,8 +18,8 @@ export const metadata: Metadata = {
 }
 
 // Runs before first paint so a saved palette/mode never flashes.
-// Defaults are moss + light for first-time visitors, regardless of OS theme.
-const themeInit = `(function(){var r=document.documentElement,p=null,m=null;try{p=localStorage.getItem('palette');m=localStorage.getItem('mode')}catch(e){}r.setAttribute('data-palette',p||'moss');r.setAttribute('data-mode',m==='dark'?'dark':'light')})()`
+// Defaults are moss + dark (the horizon sky) for first-time visitors, regardless of OS theme.
+const themeInit = `(function(){var r=document.documentElement,p=null,m=null;try{p=localStorage.getItem('palette');m=localStorage.getItem('mode')}catch(e){}r.setAttribute('data-palette',p||'moss');r.setAttribute('data-mode',m==='light'?'light':'dark')})()`
 
 export default function RootLayout({
   children,
@@ -26,12 +27,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" data-palette="moss" data-mode="light" className={newsreader.variable}>
+    <html lang="en" data-palette="moss" data-mode="dark" className={newsreader.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body className="antialiased">
         {children}
+        <SmoothScroll />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

@@ -1,10 +1,13 @@
 import Image from 'next/image'
 import { PaletteSwitcher } from '@/components/palette-switcher'
+import { Sky } from '@/components/sky'
 
 export default function Home() {
   return (
+    <>
+    <Sky />
     <main className="page">
-      <header>
+      <header className="masthead">
         <h1 className="name">Shlok Channawar</h1>
         <nav className="nav" aria-label="Sections">
           <a href="#about">about</a>
@@ -197,5 +200,6 @@ export default function Home() {
 
       <PaletteSwitcher />
     </main>
+    </>
   )
 }
