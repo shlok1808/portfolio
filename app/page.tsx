@@ -1,11 +1,14 @@
 import Image from 'next/image'
-import { PaletteSwitcher } from '@/components/palette-switcher'
 import { Sky } from '@/components/sky'
+import { SiteBackground, SiteColophon } from '@/components/lab/site'
+import { ExplainerLinks } from '@/components/lab/explainer-links'
+import './lab/lab.css'
 
 export default function Home() {
   return (
-    <>
+    <div className="home site-fx">
     <Sky />
+    <SiteBackground />
     <main className="page">
       <header className="masthead">
         <h1 className="name">Shlok Channawar</h1>
@@ -110,15 +113,7 @@ export default function Home() {
               </a>
               .
             </p>
-            <p className="links">
-              <a
-                href="https://openreview.net/pdf?id=UIaLI9XPpq"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                paper
-              </a>
-            </p>
+            <ExplainerLinks paper="lbys" paperHref="https://openreview.net/pdf?id=UIaLI9XPpq" />
           </article>
 
           <article className="entry">
@@ -132,6 +127,7 @@ export default function Home() {
               narrower: whether the model will limit a disclosure it is about to make is decodable
               before the first response token, with no comparable signal in Llama-3.1-8B-Instruct.
             </p>
+            <ExplainerLinks paper="audit" />
           </article>
 
           <article className="entry">
@@ -142,6 +138,7 @@ export default function Home() {
               client risk tolerance differently from what it outputs. Built a synthetic
               client-profile generator grounded in the Grable &amp; Lytton risk scale.
             </p>
+            <ExplainerLinks paper="kyc" />
           </article>
         </div>
       </section>
@@ -198,8 +195,8 @@ export default function Home() {
         </dl>
       </section>
 
-      <PaletteSwitcher />
+      <SiteColophon />
     </main>
-    </>
+    </div>
   )
 }
