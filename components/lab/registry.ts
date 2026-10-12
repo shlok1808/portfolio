@@ -120,7 +120,7 @@ export const OPTIONS: LabOption[] = [
     cat: 'background',
     name: 'Logit Lens',
     blurb:
-      'Laid out like a real logit-lens plot: columns are layers L0 → L27, rows are tokens. Early layers read out multilingual junk and late layers settle into English, and a tuned lens follows your cursor.',
+      'A glyph field that is also a real logit-lens plot: columns are tokens, rows are layers L0 → L27, and every cell is that layer’s top guess at the next token. Early layers read out multilingual junk, and each column locks onto its answer on the way up, so English crystallises toward the top. A spotlight follows your cursor and reads out the cell under it.',
     sky: 'none',
     layer: 'fixed',
     rest: 0.8,

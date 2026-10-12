@@ -8,11 +8,11 @@ import { bySlug } from './registry'
 /**
  * The homepage's background, switchable by visitors from the footer (like the palettes).
  * The choice lives on <html data-bg> (set before paint by the script in app/layout.tsx) and
- * in localStorage under "bg". Default: the feature constellation.
+ * in localStorage under "bg". Default: the logit lens.
  */
 const KEY = 'bg'
 const EVT = 'site-bg'
-const DEFAULT = 'constellation'
+const DEFAULT = 'logit-lens'
 const valid = (v: string | null): v is string => !!v && BACKGROUNDS.some((b) => b.id === v)
 
 function currentBg() {

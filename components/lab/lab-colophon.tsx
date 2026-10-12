@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 const PALETTES = ['slate', 'paper', 'indigo', 'plum', 'ink', 'teal', 'moss', 'clay'] as const
 
 export const BACKGROUNDS = [
-  { id: 'constellation', label: 'constellation' },
   { id: 'logit-lens', label: 'logit lens' },
+  { id: 'constellation', label: 'constellation' },
   { id: 'activations', label: 'activations' },
   { id: 'none', label: 'horizon' },
 ] as const

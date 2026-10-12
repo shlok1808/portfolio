@@ -1,45 +1,124 @@
 /**
- * 07 · Logit Lens — laid out like a real logit-lens plot. Columns are layers (L0 → L27, the
- * depth of Qwen2.5-7B), rows are token positions. Read through the unembedding, early layers
- * give multilingual junk (CJK, code, subword pieces — your nla-ci finding at layer 20, faint
- * 拒 / 严禁 / 绝不 on the refusal direction included); by the late layers the rows settle into
- * English, with a faint probability heatmap behind them. The lens under your cursor decodes
- * early (a tuned lens, if you like). The text column stays clear via the reading lane.
- * Rendering is incremental: only cells that change are redrawn.
+ * 07 · Logit Lens — a glyph field that is also a real logit-lens plot. Columns are token
+ * positions (the input runs along the bottom), rows are layers, L0 at the bottom up to L27 at
+ * the top (the depth of Qwen2.5-7B). Every cell is the top next-token guess you get by pushing
+ * that layer's residual stream through the unembedding, shaded by its probability. Cells hold
+ * whole tokens (words and word pieces), so each column is as wide as its token.
+ *
+ * Each column tells one token's story bottom to top: early layers decode to near-uniform
+ * multilingual junk (Hindi, Arabic, Chinese, Japanese, Korean, Cyrillic, code, subword pieces —
+ * the nla-ci finding, faint 拒 / 严禁 / 绝不 on the refusal direction included), the layers just
+ * before it settles land on English that is not the answer yet, and past some layer the column
+ * locks on and only gets more confident. Finishing a word locks in soonest, a fresh content
+ * word only near the top, which is why the English frays downward. The top row is the model's
+ * output: the input shifted one token left, except where the model simply guesses wrong
+ * ("look before you" → leap).
+ *
+ * The one liberty is the motion: junk cells keep re-rolling at random, fastest in the earliest
+ * layers. A lens of a fixed input is static, but down there the distribution is so flat that
+ * the top guess is close to arbitrary, and the churn stands for that. Cells that have locked
+ * onto their answer never move. The ring under the cursor is a spotlight, not a decoder: it
+ * shows what is already there and reads out the cell at its centre. The text column stays clear
+ * via the reading lane. Rendering is incremental: only cells that change are redrawn.
  */
-import { createSurface, runLoop, trackPointer, smoothstep } from '../lib/surface'
+import { createSurface, runLoop, trackPointer, clamp } from '../lib/surface'
 import { makeNoise, mulberry32 } from '../lib/noise'
 import { readTheme, onThemeChange, rgba, fontFamily, type RGB } from '../lib/theme'
 import type { BgMount } from '../lib/types'
 
-const CJK =
-  '的是不了人我在有他这中大来上国个到说们为子和你地出道也时年得就那要下以生会自着去之过家学对可她里后小么心多天而能好都然没日于起还发成事只作当想看文无开手十用主行方又如前所本见经头面公同三已老从动两长知民样现分将外但身些与高意进把法此实回理美点月明其种声全工己话儿者向情部正名定女问力机给等几很业最间新什打便位因重被走电第门相次东政海口使教西再平真听世气信北少关并内加化由却代军产入先山五太水万市眼体别处总才场师书比住员笑性通目华报立马命张活难神数件安表原车白应路期叫死常提感金何更反合放做系计或司利受光王果亲界及今京务制解各任至清物台象记边共风战'
-const REFUSAL = '拒严禁绝不严格拒绝禁止'
-const CODE = '{}[]()<>=;:_/\\|#$%&*+-~^`\'".,!?@'
-const OTHER =
-  '▁▁▁Ġ Ġ▁абвгдежзиклмнопрстуфхэюяαβγδεζηθλμνξπρστφχψωअआइउएकखगचजटडतदनपबमयरलवसहابتثجحخدذرزسشصضطعغفقكلمنهوي0123456789ẞçñøåæœ'
-const LATIN = 'etaoinshrdlucmfwypvbgkjqxz'
-const POOL = (CJK + CJK + CODE + CODE + OTHER + LATIN).split('')
 const LAYERS = 28
+const BREAK = '⏎'
 
-const PHRASES = [
-  'how do we decode activations into language we can actually trust',
-  'the residual stream',
-  'look before you steer',
-  'geometry predicts steerability',
-  'the probe was reading the labels, not the model',
-  'superposition',
-  'does the advisor know more than it says',
-  'sparse autoencoder features',
-  'representation is not causation',
-  'what does the model believe',
-  'report the increment over a named baseline',
-  'publish the null',
-  'the sense that it is being watched',
+// "|" splits a word into subword pieces; "actual{guess}" is a token the model gets wrong.
+const PROMPTS = [
+  'how do we de|code activ|ations into lang|uage we can actu|ally trust{use}',
+  'the resid|ual stream{connection}',
+  'look before you steer{leap}',
+  'geo|metry pred|icts{of} steer|ability',
+  'the probe{model} was reading{trained} the labels{text} , not the model',
+  'super|position',
+  'does the advisor{model} know more than it says{knows}',
+  'sparse auto|encoder features',
+  'represent|ation is not caus|ation{enough}',
+  'what does the model believe{do}',
+  'report the incre|ment{results} over a named{fixed} base|line',
+  'publish the null{results}',
+  'the sense that it is being watched{used}',
 ]
 
+interface Tok {
+  text: string
+  /** continues the previous token's word */
+  cont: boolean
+  /** what the model predicts here instead of this token */
+  guess?: string
+}
+
+const STREAM: Tok[] = []
+const STARTS: number[] = []
+for (const p of PROMPTS) {
+  STARTS.push(STREAM.length)
+  for (const word of p.split(' ')) {
+    const m = word.match(/^(.*?)(?:\{(.*)\})?$/)!
+    m[1].split('|').forEach((text, j) => STREAM.push({ text, cont: j > 0, guess: j === 0 ? m[2] : undefined }))
+  }
+  STREAM.push({ text: BREAK, cont: false })
+}
+
+const FUNCTION = new Set(
+  'the we do how into can you was not it is than a over that being does what more before ,'.split(' ').concat(BREAK),
+)
+
+// What early layers decode to: real vocabulary items. [weight, tokens]: the weight is per
+// script, not per token.
+const JUNK: [number, string][] = [
+  [3, 'नहीं और है के में यह क्या लिए हम एक से न व'], // Hindi
+  [3, 'في من على لا هذا أن كان إلى ما هو كل و'], // Arabic
+  [2, '的 不是 我们 可以 这个 没有 什么 因为 是 了 在'], // Chinese
+  [2, 'の です ない こと する これ から ます は'], // Japanese
+  [2, '것 하지 않 그리고 있는 에서 는 을'], // Korean
+  [2, 'не это что как или для был и'], // Russian
+  [1, 'και το δεν είναι με'], // Greek
+  [1, 'לא של את זה על'], // Hebrew
+  [1, 'ไม่ ที่ การ และ เป็น'], // Thai
+  [1, 'না এবং একটি আমি'], // Bengali
+  [1, 'இல்லை ஒரு மற்றும்'], // Tamil
+  [1, 'نہیں است برای'], // Urdu, Persian
+  [1, 'değil không nicht ção über niño że'],
+  [3, '{ </ (); _ \\n == #include self .py :// [] 0x }} -> $_ null'],
+  [2, 'ing tion ## Ġ ▁▁ ĠĠ ed ly un ." ),'],
+]
+const REFUSAL = ['拒', '严禁', '绝不', '拒绝', '禁止']
+// What a column decodes to just before it settles: English, but not the answer yet.
+const MID =
+  'it a to of in is that this thing way more about know read see find make word mean data signal layer model answer true real first same other what how some'.split(
+    ' ',
+  )
+
+const JUNK_K = 0
+const CAND_K = 1
+const FINAL_K = 2
+const REFUSAL_K = 3
+
+interface Column {
+  x: number
+  w: number
+  input: string
+  // per layer: top guess, its probability, its stage
+  tok: string[]
+  p: Float32Array
+  kind: Uint8Array
+  // per row: resting brightness of junk, and whether the spotlight is on it
+  base: Float32Array
+  lit: Uint8Array
+}
+
+type Sized = { t: string; w: number }[]
+
+const pct = (p: number) => (p >= 0.0995 ? `${Math.round(p * 100)}%` : `${(p * 100).toFixed(1)}%`)
+const glyphs = (s: string) => Array.from(s).length
+
 export const mount: BgMount = (host, { thumb }) => {
-  const rand = mulberry32(28)
   const noise = makeNoise(4)
   let theme = readTheme()
   const surf = createSurface(host)
@@ -47,187 +126,271 @@ export const mount: BgMount = (host, { thumb }) => {
   const pointer = trackPointer(host)
   const mono = fontFamily(host, '--lab-mono', 'ui-monospace, Menlo, monospace')
 
-  const CW = thumb ? 12 : 16
-  const CH = thumb ? 16 : 22
-  let cols = 0
+  const INPUT_H = 22
+  // each visit opens on a different sentence
+  const start = thumb ? 0 : STARTS[Math.floor(Math.random() * STARTS.length)]
+  const PAD = thumb ? 8 : 12
+
+  let CH = 22
+  let GX = 0 // left gutter: layer labels
+  let gridH = 0
   let rows = 0
-  let glyph: string[] = []
-  let plain: string[] = []
-  let base = new Float32Array(0)
-  let special = new Uint8Array(0)
-  let english = new Uint8Array(0) // decoded at this layer without any lens
-  let prob = new Float32Array(0)
-  let inLens = new Uint8Array(0)
-  let enteredAt = new Float32Array(0)
-  let prevLens: number[] = []
+  let adv = 7.5 // advance of one monospace character
+  let columns: Column[] = []
+  let junkPool: Sized = []
+  let midPool: Sized = []
+  let prevLens: [Column, number][] = []
+  let lensX = -9999
+  let lensY = -9999
+  let lensR = 100
 
-  const layerOf = (c: number) => (cols > 1 ? c / (cols - 1) : 0)
-
-  function rebuild() {
-    const { w, h } = surf
-    cols = Math.ceil(w / CW) + 1
-    rows = Math.ceil(h / CH) + 1
-    const n = cols * rows
-    glyph = new Array(n)
-    plain = new Array(n)
-    base = new Float32Array(n)
-    special = new Uint8Array(n)
-    english = new Uint8Array(n)
-    prob = new Float32Array(n)
-    inLens = new Uint8Array(n)
-    enteredAt = new Float32Array(n)
-    prevLens = []
-    const text = PHRASES.join('  ·  ') + '  ·  '
-    for (let r = 0; r < rows; r++) {
-      const off = Math.floor(rand() * text.length)
-      for (let c = 0; c < cols; c++) {
-        const i = r * cols + c
-        const L = layerOf(c)
-        glyph[i] = POOL[Math.floor(rand() * POOL.length)]
-        plain[i] = text[(off + c) % text.length]
-        const v = noise.fbm2(c * 0.06, r * 0.09, 3)
-        base[i] = Math.max(0.035, Math.min(0.2, 0.1 + v * 0.2)) * (1 - 0.35 * L)
-        const pe = smoothstep(0.62, 0.97, L)
-        english[i] = rand() < pe ? 1 : 0
-        prob[i] = pe * (0.55 + 0.45 * rand())
-      }
-    }
-    for (let k = 0; k < Math.max(4, Math.floor(n / 500)); k++) {
-      const c = Math.floor(rand() * cols * 0.6)
-      const i = Math.floor(rand() * rows) * cols + c
-      glyph[i] = REFUSAL[Math.floor(rand() * REFUSAL.length)]
-      special[i] = 1
-      english[i] = 0
-    }
-    fullRedraw()
-  }
-
+  const rowLayer = (r: number) => (rows > 1 ? Math.round(((rows - 1 - r) / (rows - 1)) * (LAYERS - 1)) : LAYERS - 1)
   const inkOf = (): RGB => (theme.mode === 'dark' ? [232, 226, 216] : theme.ink)
-
-  function drawCell(i: number, ch: string, color: string, heat = 0) {
-    const ctx = surf.ctx
-    const r = Math.floor(i / cols)
-    const c = i - r * cols
-    const x = c * CW
-    const y = r * CH
-    ctx.clearRect(x, y, CW, CH)
-    if (heat > 0.01) {
-      ctx.fillStyle = rgba(theme.accent, heat)
-      ctx.fillRect(x + 1, y + 1, CW - 2, CH - 2)
-    }
-    ctx.fillStyle = color
-    ctx.fillText(ch, x + CW / 2, y + CH * 0.72)
-  }
-
-  function restCell(i: number) {
-    if (special[i]) return drawCell(i, glyph[i], rgba([255, 120, 110], theme.mode === 'dark' ? 0.32 : 0.45))
-    if (english[i]) return drawCell(i, plain[i], rgba(theme.accent, 0.22 + 0.5 * prob[i]), 0.07 * prob[i])
-    drawCell(i, glyph[i], rgba(inkOf(), base[i] * (theme.mode === 'dark' ? 1 : 1.3)))
-  }
 
   function setFont() {
     const ctx = surf.ctx
-    ctx.font = `${thumb ? 10 : 12.5}px ${mono}, 'PingFang SC', 'Hiragino Sans', sans-serif`
+    ctx.font = `${thumb ? 9.5 : 12.5}px ${mono}, 'PingFang SC', 'Hiragino Sans', sans-serif`
     ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+  }
+
+  /** a random token from a width-sorted pool that fits in maxW */
+  function fit(pool: Sized, rand: () => number, maxW: number) {
+    let n = pool.length
+    while (n > 1 && pool[n - 1].w > maxW) n--
+    return pool[Math.floor(rand() * n)].t
+  }
+
+  /** The lens for one token position: top guess, its probability and its stage at every layer. */
+  function makeColumn(k: number, x: number): Column {
+    const n = STREAM.length
+    const cur = STREAM[k % n]
+    const nxt = STREAM[(k + 1) % n]
+    const rand = mulberry32(((k % n) + 1) * 7919)
+    // nothing predicts how a new sentence opens: the model falls back on something generic
+    const pred = nxt.guess ?? (cur.text === BREAK && !FUNCTION.has(nxt.text) ? 'the' : nxt.text)
+    const w = Math.round(Math.max(glyphs(cur.text), glyphs(pred), 2) * adv + PAD)
+    const maxW = w - 4
+
+    // conv: the layer where the column locks onto its answer. pf: its final probability.
+    // Finishing a word is easy and early; opening a new sentence is close to a coin toss.
+    let conv: number
+    let pf: number
+    // Even the easy ones only surface in roughly the last third of the layers.
+    if (cur.text === BREAK) [conv, pf] = [25 + rand() * 1.4, 0.06 + rand() * 0.08]
+    else if (nxt.cont) [conv, pf] = [16 + rand() * 5, 0.86 + rand() * 0.13]
+    else if (nxt.guess) [conv, pf] = [22 + rand() * 4, 0.16 + rand() * 0.2]
+    else if (FUNCTION.has(nxt.text)) [conv, pf] = [18 + rand() * 5, 0.45 + rand() * 0.4]
+    else [conv, pf] = [21 + rand() * 5, 0.22 + rand() * 0.4]
+    conv = Math.min(LAYERS - 2, Math.round(conv))
+
+    const tok = new Array<string>(LAYERS)
+    const p = new Float32Array(LAYERS)
+    const kind = new Uint8Array(LAYERS)
+    for (let l = 0; l < LAYERS; l++) {
+      if (l >= conv) {
+        tok[l] = pred
+        p[l] = pf * (0.22 + 0.78 * Math.pow((l - conv + 1) / (LAYERS - conv), 1.4))
+        kind[l] = FINAL_K
+      } else if (l >= conv - 5) {
+        // the answer sometimes surfaces a layer or two early, then slips away again
+        if (l === conv - 2 && rand() < 0.25) {
+          tok[l] = pred
+          kind[l] = FINAL_K
+        } else {
+          tok[l] = kind[l - 1] === CAND_K && rand() < 0.3 ? tok[l - 1] : fit(midPool, rand, maxW)
+          kind[l] = CAND_K
+        }
+        p[l] = 0.025 + 0.07 * ((l - (conv - 5)) / 5) + rand() * 0.02
+      } else {
+        if (l > 0 && kind[l - 1] === JUNK_K && rand() < 0.3) tok[l] = tok[l - 1]
+        else if (rand() < 0.005) {
+          const t = REFUSAL[Math.floor(rand() * REFUSAL.length)]
+          tok[l] = glyphs(t) * adv * 1.7 > maxW ? REFUSAL[0] : t
+          kind[l] = REFUSAL_K
+        } else tok[l] = fit(junkPool, rand, maxW)
+        p[l] = 0.003 + rand() * 0.012 + 0.006 * (l / conv)
+      }
+    }
+
+    const base = new Float32Array(rows)
+    for (let r = 0; r < rows; r++) {
+      const v = noise.fbm2((x / 16) * 0.06, r * 0.09, 3)
+      base[r] = Math.max(0.07, Math.min(0.24, 0.14 + v * 0.22)) * (1 - 0.3 * (rowLayer(r) / (LAYERS - 1)))
+    }
+    return { x, w, input: cur.text, tok, p, kind, base, lit: new Uint8Array(rows) }
+  }
+
+  /** boost: 0 at rest, up to 1 at the centre of the spotlight */
+  function drawCell(col: Column, r: number, boost = 0) {
+    const ctx = surf.ctx
+    const y = r * CH
+    ctx.clearRect(col.x, y, col.w, CH)
+    const l = rowLayer(r)
+    const p = col.p[l]
+    const kind = col.kind[l]
+    const light = theme.mode === 'dark' ? 1 : 1.3
+    if (kind === FINAL_K) {
+      ctx.fillStyle = rgba(theme.accent, 0.02 + 0.09 * p + 0.08 * boost)
+      ctx.fillRect(col.x + 1, y + 1, col.w - 2, CH - 2)
+      ctx.fillStyle = rgba(theme.accent, Math.min(1, 0.22 + 0.55 * p + 0.5 * boost))
+    } else if (kind === REFUSAL_K) ctx.fillStyle = rgba([255, 120, 110], (theme.mode === 'dark' ? 0.32 : 0.45) + 0.5 * boost)
+    else if (kind === CAND_K) ctx.fillStyle = rgba(inkOf(), Math.min(1, (0.14 + 1.4 * p) * light + 0.55 * boost))
+    else ctx.fillStyle = rgba(inkOf(), Math.min(1, col.base[r] * light + 0.5 * boost))
+    ctx.fillText(col.tok[l], col.x + col.w / 2, y + CH / 2 + 1, col.w - 4)
+  }
+
+  // the x-axis: the input token under each column
+  function drawInput(col: Column) {
+    if (thumb) return
+    const ctx = surf.ctx
+    ctx.clearRect(col.x, gridH, col.w, INPUT_H)
+    ctx.fillStyle = rgba(inkOf(), 0.2)
+    ctx.fillRect(col.x + 1, gridH + 2, col.w - 2, 1)
+    ctx.fillStyle = rgba(inkOf(), theme.mode === 'dark' ? 0.55 : 0.7)
+    ctx.fillText(col.input, col.x + col.w / 2, gridH + 13, col.w - 4)
   }
 
   function fullRedraw() {
-    const { ctx, w, h } = surf
-    ctx.clearRect(0, 0, w, h)
+    surf.ctx.clearRect(0, 0, surf.w, surf.h)
     setFont()
-    for (let i = 0; i < glyph.length; i++) restCell(i)
+    for (const col of columns) {
+      for (let r = 0; r < rows; r++) drawCell(col, r)
+      drawInput(col)
+    }
+  }
+
+  function rebuild() {
+    const { w, h } = surf
+    GX = thumb ? 0 : 32
+    const chrome = thumb ? 0 : INPUT_H + 24 // input tokens + caption
+    rows = Math.min(LAYERS, Math.max(4, Math.floor((h - chrome) / (thumb ? 13 : 17))))
+    CH = Math.max(1, Math.floor((h - chrome) / rows))
+    gridH = rows * CH
+
+    setFont()
+    const ctx = surf.ctx
+    adv = ctx.measureText('m').width
+    const sized = (list: string[]): Sized => list.map((t) => ({ t, w: ctx.measureText(t).width })).sort((a, b) => a.w - b.w)
+    junkPool = sized(JUNK.flatMap(([n, s]) => Array<string[]>(n).fill(s.split(' ')).flat()))
+    midPool = sized(MID)
+
+    columns = []
+    prevLens = []
+    let k = start
+    for (let x = GX; x < w; ) {
+      const col = makeColumn(k++, x)
+      columns.push(col)
+      x += col.w
+    }
+    fullRedraw()
   }
 
   const unsub = onThemeChange((t) => {
     theme = t
     fullRedraw()
+    drawOverlay() // the loop may be paused (reduced motion)
   })
 
   const step = (t: number) => {
     const { w, h } = surf
+    if (!columns.length) return
     setFont()
-    const n = glyph.length
-    if (!n) return
 
-    // early layers churn, late layers have converged
-    const muts = Math.round(n * 0.014)
-    for (let k = 0; k < muts; k++) {
-      const i = Math.floor(Math.random() * n)
-      if (inLens[i] || special[i] || english[i]) continue
-      const c = i % cols
-      if (Math.random() < layerOf(c) * 0.9) continue
-      glyph[i] = POOL[Math.floor(Math.random() * POOL.length)]
-      restCell(i)
+    // junk cells re-roll at random; the deeper the layer, the calmer
+    const muts = Math.round(columns.length * rows * 0.014)
+    for (let m = 0; m < muts; m++) {
+      const col = columns[Math.floor(Math.random() * columns.length)]
+      const r = Math.floor(Math.random() * rows)
+      const l = rowLayer(r)
+      if (col.kind[l] !== JUNK_K || col.lit[r]) continue
+      if (Math.random() < (l / (LAYERS - 1)) * 0.9) continue
+      col.tok[l] = fit(junkPool, Math.random, col.w - 4)
+      drawCell(col, r)
     }
 
-    // the lens: cursor, or a slow wander through the margins
-    const ps = pointer.state
-    const live = ps.active && performance.now() - ps.lastMove < 3500
-    const side = Math.sin(t * 0.05) > 0 ? 0.16 : 0.84
-    const lx = live ? ps.x : w * (side + 0.07 * Math.sin(t * 0.23))
-    const ly = live ? ps.y : h * (0.5 + 0.34 * Math.sin(t * 0.17 + 1.3))
-    const R = thumb ? 60 : Math.min(140, Math.max(100, w * 0.085))
+    // the spotlight: cursor, or a slow wander through the margins
+    const ptr = pointer.state
+    const live = ptr.active && performance.now() - ptr.lastMove < 3500
+    const narrow = w < 760 // only the masthead shows the lens on phones
+    const side = narrow ? 0.5 : Math.sin(t * 0.05) > 0 ? 0.16 : 0.84
+    lensX = live ? ptr.x : w * (side + (narrow ? 0.3 : 0.07) * Math.sin(t * 0.23))
+    lensY = live ? ptr.y : narrow ? h * (0.22 + 0.14 * Math.sin(t * 0.17 + 1.3)) : h * (0.5 + 0.34 * Math.sin(t * 0.17 + 1.3))
+    lensR = thumb ? 60 : Math.min(140, Math.max(100, w * 0.085))
 
-    const c0 = Math.max(0, Math.floor((lx - R) / CW))
-    const c1 = Math.min(cols - 1, Math.ceil((lx + R) / CW))
-    const r0 = Math.max(0, Math.floor((ly - R) / CH))
-    const r1 = Math.min(rows - 1, Math.ceil((ly + R) / CH))
-    const cur: number[] = []
-    const acc = theme.accent
-    for (let r = r0; r <= r1; r++)
-      for (let c = c0; c <= c1; c++) {
-        const cx = c * CW + CW / 2
-        const cy = r * CH + CH / 2
-        const d = Math.hypot(cx - lx, (cy - ly) * 1.05)
-        if (d > R) continue
-        const i = r * cols + c
-        if (!inLens[i]) enteredAt[i] = t
-        cur.push(i)
-        const s = 1 - Math.pow(d / R, 2.2)
-        const age = t - enteredAt[i]
-        const scrambling = age < 0.16 + (1 - s) * 0.12
-        const ch = scrambling ? POOL[Math.floor(Math.random() * POOL.length)] : plain[i]
-        const a = scrambling ? 0.35 * s + 0.1 : 0.3 + 0.7 * s
-        drawCell(i, ch, rgba(scrambling ? inkOf() : acc, a), scrambling ? 0 : 0.1 * s)
+    const r0 = Math.max(0, Math.floor((lensY - lensR) / CH))
+    const r1 = Math.min(rows - 1, Math.ceil((lensY + lensR) / CH))
+    const cur: [Column, number][] = []
+    for (const col of columns) {
+      const cx = col.x + col.w / 2
+      if (Math.abs(cx - lensX) > lensR) continue
+      for (let r = r0; r <= r1; r++) {
+        const d = Math.hypot(cx - lensX, r * CH + CH / 2 - lensY)
+        if (d > lensR) continue
+        cur.push([col, r])
+        drawCell(col, r, 1 - Math.pow(d / lensR, 2.2))
       }
-    for (const i of prevLens) inLens[i] = 0
-    for (const i of cur) inLens[i] = 1
-    for (const i of prevLens) if (!inLens[i]) restCell(i)
+    }
+    for (const [col, r] of prevLens) col.lit[r] = 0
+    for (const [col, r] of cur) col.lit[r] = 1
+    for (const [col, r] of prevLens) if (!col.lit[r]) drawCell(col, r)
     prevLens = cur
 
-    // overlay: layer ruler + lens ring
+    drawOverlay()
+  }
+
+  // layer axis, captions and the spotlight ring
+  function drawOverlay() {
+    const { w, h } = surf
     const o = overlay.ctx
+    const acc = theme.accent
     o.clearRect(0, 0, overlay.w, overlay.h)
+    o.lineWidth = 1
+    o.textBaseline = 'middle'
     if (!thumb) {
       o.font = `10px ${mono}`
-      o.textAlign = 'center'
-      for (const L of [0, 4, 8, 12, 16, 20, 24, 27]) {
-        const x = (L / (LAYERS - 1)) * (cols - 1) * CW + CW / 2
-        o.fillStyle = rgba(L >= 20 ? acc : inkOf(), L === 20 ? 0.8 : 0.4)
-        o.fillText(`L${L}`, x, 14)
-      }
-      o.textAlign = 'left'
-      o.fillStyle = rgba(inkOf(), 0.4)
-      o.fillText('logit lens · rows are tokens, columns are layers', 16, h - 18)
       o.textAlign = 'right'
-      o.fillText('junk early · English late →', w - 16, h - 18)
+      let lastLabel = -1
+      for (let r = 0; r < rows; r++) {
+        const l = rowLayer(r)
+        if ((l % 4 !== 0 && l !== LAYERS - 1) || l === 24 || l === lastLabel) continue
+        lastLabel = l
+        o.fillStyle = rgba(l >= 20 ? acc : inkOf(), l === LAYERS - 1 ? 0.8 : 0.45)
+        o.fillText(`L${l}`, GX - 6, r * CH + CH / 2 + 0.5)
+      }
+      o.fillStyle = rgba(inkOf(), 0.45)
+      o.fillText('in', GX - 6, gridH + 13)
       o.textAlign = 'left'
+      o.fillText(w < 900 ? 'logit lens · next-token guess at each layer' : 'logit lens · rows are layers, columns are tokens, each cell is that layer’s guess at the next token', 16, h - 12)
+      if (w >= 900) {
+        o.textAlign = 'right'
+        o.fillText('junk in the early layers · English by the top ↑', w - 16, h - 12)
+      }
     }
     o.strokeStyle = rgba(acc, 0.45)
-    o.lineWidth = 1
     o.beginPath()
-    o.arc(lx, ly, R + 4, 0, Math.PI * 2)
+    o.arc(lensX, lensY, lensR + 4, 0, Math.PI * 2)
     o.stroke()
     o.strokeStyle = rgba(acc, 0.15)
     o.beginPath()
-    o.arc(lx, ly, R + 10, 0, Math.PI * 2)
+    o.arc(lensX, lensY, lensR + 10, 0, Math.PI * 2)
     o.stroke()
-    if (!thumb) {
-      o.font = `10.5px ${mono}`
-      o.fillStyle = rgba(acc, 0.85)
-      const layer = Math.round(Math.max(0, Math.min(1, lx / w)) * (LAYERS - 1))
-      o.fillText(`tuned lens · L${layer}`, lx + (R + 10) * Math.cos(-0.7) + 8, ly + (R + 10) * Math.sin(-0.7))
-    }
+    // read out the cell at the centre of the ring
+    const col = columns.find((c) => lensX >= c.x && lensX < c.x + c.w)
+    const r = Math.floor(lensY / CH)
+    if (thumb || !col || r < 0 || r >= rows) return
+    const l = rowLayer(r)
+    o.strokeStyle = rgba(acc, 0.8)
+    o.strokeRect(col.x + 0.5, r * CH + 0.5, col.w - 1, CH - 1)
+    o.font = `10.5px ${mono}, 'PingFang SC', 'Hiragino Sans', sans-serif`
+    o.fillStyle = rgba(acc, 0.85)
+    // isolate the token so an Arabic or Hebrew guess cannot reorder the rest of the label
+    const label = `logit lens · L${l} · top guess “\u2068${col.tok[l]}\u2069” ${pct(col.p[l])}`
+    // above the ring (below it near the top edge), nudged inward so it never leaves the screen
+    const half = o.measureText(label).width / 2
+    const above = lensY - lensR - 22 > 10
+    o.textAlign = 'center'
+    o.fillText(label, clamp(lensX, 12 + half, Math.max(12 + half, w - 12 - half)), above ? lensY - lensR - 22 : lensY + lensR + 22)
   }
 
   surf.onResize = () => rebuild()
