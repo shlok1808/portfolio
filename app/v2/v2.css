@@ -1,0 +1,435 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   v2 — the redesign: a classic academic page (Georgia + system sans) over live background art. Everything is scoped to .v2 or to the v2-* palettes, so the
+   live homepage and the design lab are untouched.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Light (cream) and dark (cocoa, a mid-dark, never black) ─────────────────── */
+html:root[data-palette='v2-cream'][data-mode='light'] {
+  --ground: #f3ede2;
+  --ink: #221d18;
+  --muted: #7a7064;
+  --rule: #e0d6c5;
+  --accent: #a4492a;
+  --accent-strong: #7d3419;
+  color-scheme: light;
+}
+html:root[data-palette='v2-cream'][data-mode='dark'] {
+  --ground: #332c26;
+  --ink: #f1e8da;
+  --muted: #b6a895;
+  --rule: #4a4038;
+  --accent: #eaa57c;
+  --accent-strong: #f6c3a2;
+  color-scheme: dark;
+}
+
+/* the paper grain from globals.css, softer here */
+html:root[data-palette^='v2-'] body::after {
+  opacity: 0.1;
+}
+html:root[data-palette^='v2-'][data-mode='dark'] body::after {
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+}
+html.v2-retone,
+html.v2-retone body,
+html.v2-retone .v2 * {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease !important;
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+.v2 {
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans: -apple-system, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --code: 'SF Mono', Menlo, Monaco, 'Courier New', monospace;
+  position: relative;
+  min-height: 100vh;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.v2 ::selection {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.v2-art {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.v2-art.on {
+  opacity: 1;
+}
+.v2-art canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.v2-page {
+  position: relative;
+  z-index: 1;
+}
+.v2-col {
+  width: min(680px, 100% - 2.5rem);
+  margin: 0 auto;
+  padding: 6.5rem 0 3rem;
+}
+
+.v2 a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, var(--ink) 45%, transparent);
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+.v2 a:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+.v2 :is(a, button):focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.v2 button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.v2 :is(p, h1, h2, h3, ul, ol) {
+  margin: 0;
+}
+.v2 h1,
+.v2 h2,
+.v2 h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.v2-corner {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.5rem;
+  z-index: 2;
+}
+.v2 .v2-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  transition: color 0.15s ease;
+}
+.v2 .v2-mode:hover {
+  color: var(--ink);
+}
+.v2-mode-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+  transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.v2-mode-dot[data-mode='dark'] {
+  transform: rotate(180deg);
+}
+
+.v2-hero {
+  padding-bottom: 0.5rem;
+}
+.v2 .v2-name {
+  font-size: 2.25rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.1rem;
+}
+.v2 .v2-role {
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+.v2 .v2-role + .v2-role {
+  margin-top: 0.35rem;
+}
+.v2 .v2-email {
+  margin-top: 1.1rem;
+}
+.v2 .v2-email a {
+  text-decoration: none;
+}
+.v2 .v2-email a:hover code {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.v2 code {
+  font-family: var(--code);
+  font-size: 0.75rem;
+  padding: 0.18rem 0.4rem;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  color: var(--ink);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.v2-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  margin-top: 3.25rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 1.05rem;
+}
+.v2 .v2-nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.v2 .v2-nav a:hover {
+  color: var(--ink);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────────── */
+.v2-sec {
+  padding-top: 4.75rem;
+  scroll-margin-top: 1.5rem;
+}
+.v2 .v2-sec h2 {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+}
+.v2-sec > p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+.v2-sec > p + p {
+  margin-top: 1.15rem;
+}
+.v2 .v2-quiet {
+  color: var(--muted);
+}
+
+/* ── Research list ────────────────────────────────────────────────────────── */
+.w-list {
+  list-style: none;
+  padding: 0;
+}
+.w-item {
+  padding: 1.15rem 0 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.w-item:first-child {
+  padding-top: 0.2rem;
+}
+.v2 .w-head {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.25rem;
+  text-align: left;
+}
+.w-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+}
+.w-head:hover .w-title {
+  text-decoration-color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+.w-plus {
+  position: relative;
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  color: var(--muted);
+}
+.w-plus::before,
+.w-plus::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: currentColor;
+  transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.w-plus::after {
+  transform: rotate(90deg);
+}
+.w-item[data-open] .w-plus::after {
+  transform: rotate(0deg);
+}
+.w-head:hover .w-plus {
+  color: var(--ink);
+}
+.v2 .w-venue {
+  margin-top: 0.2rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.v2 .w-venue a {
+  text-decoration-color: color-mix(in srgb, var(--muted) 50%, transparent);
+}
+
+.w-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.w-item[data-open] .w-body {
+  grid-template-rows: 1fr;
+}
+.w-inner {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.w-item[data-open] .w-inner {
+  opacity: 1;
+  transition-delay: 0.08s;
+}
+.v2 .w-summary {
+  padding-top: 0.8rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.w-poster {
+  position: relative;
+  display: block;
+  width: min(100%, 26rem);
+  aspect-ratio: 16 / 9;
+  margin-top: 1rem;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #15130f !important;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent);
+}
+.w-poster-cta {
+  position: absolute;
+  left: 0.55rem;
+  bottom: 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.55rem 0.22rem 0.45rem;
+  border-radius: 3px;
+  background: rgba(20, 18, 15, 0.75);
+  color: #f1ede6;
+  font-size: 0.78rem;
+  transition: background-color 0.15s ease;
+}
+.w-poster:hover .w-poster-cta {
+  background: rgba(20, 18, 15, 0.92);
+}
+.w-poster-cta b {
+  font-weight: 400;
+  font-size: 0.6rem;
+}
+.v2 .w-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.4rem;
+  margin-top: 0.85rem;
+  font-size: 0.95rem;
+}
+.v2 .w-links button {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, var(--ink) 45%, transparent);
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+.v2 .w-links button:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+.v2 .w-credit {
+  margin: 0.6rem 0 0.3rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ── Contact ─────────────────────────────────────────────────────────────── */
+.v2-contact {
+  list-style: none;
+  padding: 0;
+  font-size: 1.05rem;
+}
+.v2-contact li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+  padding: 0.2rem 0;
+}
+.v2-contact li > span {
+  width: 5.5rem;
+  flex: none;
+  color: var(--muted);
+}
+.v2-contact a {
+  overflow-wrap: anywhere;
+}
+
+/* ── Footer + controls ───────────────────────────────────────────────────── */
+.v2-foot {
+  margin-top: 6rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ── Lightbox ─────────────────────────────────────────────────────────────── */
+.v2 .lb {
+  background: color-mix(in srgb, #0d0c0a 80%, transparent);
+}
+
+/* ── Small screens ───────────────────────────────────────────────────────── */
+@media (max-width: 40rem) {
+  .v2-col {
+    padding-top: 4.5rem;
+  }
+  .v2-sec {
+    padding-top: 3.75rem;
+  }
+  .v2 .v2-name {
+    font-size: 2rem;
+  }
+  .v2-nav {
+    gap: 0.5rem 1.4rem;
+  }
+  .v2-contact li > span {
+    width: 4.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2 *,
+  .v2 *::before,
+  .v2 *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
