@@ -20,11 +20,10 @@ export const metadata: Metadata = {
     'Shlok Channawar — Applied Data Science at Penn State, working on mechanistic interpretability.',
 }
 
-// Runs before first paint so a saved palette/mode/background never flashes.
-// Defaults are moss + dark for first-time visitors, regardless of OS theme. On the homepage the
-// background defaults to the logit lens; visitors can switch it in the footer.
-// The /v2 redesign is cream in light mode and cocoa in dark; it follows the system until a visitor picks.
-const themeInit = `(function(){var r=document.documentElement,p=null,m=null,b=null;if(location.pathname.indexOf('/v2')===0){try{m=localStorage.getItem('v2-mode')}catch(e){}if(m!=='dark'&&m!=='light')m=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';r.setAttribute('data-palette','v2-cream');r.setAttribute('data-mode',m);return}try{p=localStorage.getItem('palette');m=localStorage.getItem('mode');b=localStorage.getItem('bg')}catch(e){}r.setAttribute('data-palette',p||'moss');r.setAttribute('data-mode',m==='light'?'light':'dark');if(location.pathname==='/'){r.setAttribute('data-bg',['constellation','logit-lens','activations','none'].indexOf(b)>-1?b:'logit-lens')}})()`
+// Runs before first paint so a saved palette/mode never flashes.
+// The homepage is cream in light mode and cocoa in dark, and follows the system until a visitor
+// picks. Other pages (photography, the design lab) keep the old palettes: moss + dark by default.
+const themeInit = `(function(){var r=document.documentElement,p=null,m=null;if(location.pathname==='/'){try{m=localStorage.getItem('v2-mode')}catch(e){}if(m!=='dark'&&m!=='light')m=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';r.setAttribute('data-palette','v2-cream');r.setAttribute('data-mode',m);return}try{p=localStorage.getItem('palette');m=localStorage.getItem('mode')}catch(e){}r.setAttribute('data-palette',p||'moss');r.setAttribute('data-mode',m==='light'?'light':'dark')})()`
 
 export default function RootLayout({
   children,

@@ -1,6 +1,7 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   v2 — the redesign: a classic academic page (Georgia + system sans) over live background art. Everything is scoped to .v2 or to the v2-* palettes, so the
-   live homepage and the design lab are untouched.
+   The homepage: a classic academic page (Georgia + system sans) over a live dithered background.
+   Everything is scoped to .v2 or to the v2-* palette, so the photography page and the design lab
+   keep their own styles.
    ───────────────────────────────────────────────────────────────────────────── */
 
 /* ── Light (cream) and dark (cocoa, a mid-dark, never black) ─────────────────── */

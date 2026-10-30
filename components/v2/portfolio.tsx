@@ -4,7 +4,7 @@ import { Work } from './work'
 
 const ext = { target: '_blank', rel: 'noopener noreferrer' } as const
 
-/** The redesigned homepage: a classic one-column page over a live background piece. */
+/** The homepage: a classic one-column page over a faint, live dithered background. */
 export function Portfolio() {
   return (
     <>
