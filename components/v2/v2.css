@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   The homepage: a classic academic page (Georgia + system sans) over a live dithered background.
+   The homepage: a classic academic page set in Palatino, over a live dithered background.
    Everything is scoped to .v2 or to the v2-* palette, so the photography page and the design lab
    keep their own styles.
    ───────────────────────────────────────────────────────────────────────────── */
@@ -8,6 +8,7 @@
 html:root[data-palette='v2-cream'][data-mode='light'] {
   --ground: #f3ede2;
   --ink: #221d18;
+  --body: #686157;
   --muted: #7a7064;
   --rule: #e0d6c5;
   --accent: #a4492a;
@@ -17,6 +18,7 @@ html:root[data-palette='v2-cream'][data-mode='light'] {
 html:root[data-palette='v2-cream'][data-mode='dark'] {
   --ground: #332c26;
   --ink: #f1e8da;
+  --body: #c9bead;
   --muted: #b6a895;
   --rule: #4a4038;
   --accent: #eaa57c;
@@ -24,13 +26,10 @@ html:root[data-palette='v2-cream'][data-mode='dark'] {
   color-scheme: dark;
 }
 
-/* the paper grain from globals.css, softer here */
+/* no paper grain from globals.css here: its fixed blended layer is re-composited on every scroll
+   frame, and the dither is texture enough */
 html:root[data-palette^='v2-'] body::after {
-  opacity: 0.1;
-}
-html:root[data-palette^='v2-'][data-mode='dark'] body::after {
-  opacity: 0.14;
-  mix-blend-mode: overlay;
+  display: none;
 }
 html.v2-retone,
 html.v2-retone body,
@@ -40,14 +39,13 @@ html.v2-retone .v2 * {
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 .v2 {
-  --serif: Georgia, 'Times New Roman', serif;
-  --sans: -apple-system, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --serif: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
   --code: 'SF Mono', Menlo, Monaco, 'Courier New', monospace;
   position: relative;
   min-height: 100vh;
-  font-family: var(--sans);
+  font-family: var(--serif);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.8;
   color: var(--ink);
 }
 .v2 ::selection {
@@ -67,10 +65,11 @@ html.v2-retone .v2 * {
 }
 .v2-art canvas {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   display: block;
-  width: 100%;
-  height: 100%;
+  /* one canvas pixel per dither dot, scaled up crisp */
+  image-rendering: pixelated;
 }
 
 .v2-page {
@@ -84,11 +83,11 @@ html.v2-retone .v2 * {
 }
 
 .v2 a {
-  color: inherit;
+  color: var(--ink);
   text-decoration: underline;
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  text-decoration-color: color-mix(in srgb, var(--ink) 45%, transparent);
+  text-underline-offset: 0.22em;
+  text-decoration-color: color-mix(in srgb, var(--ink) 22%, transparent);
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 .v2 a:hover {
@@ -115,7 +114,7 @@ html.v2-retone .v2 * {
 .v2 h2,
 .v2 h3 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: 700;
 }
 
 /* ── Header ───────────────────────────────────────────────────────────────── */
@@ -152,10 +151,10 @@ html.v2-retone .v2 * {
   padding-bottom: 0.5rem;
 }
 .v2 .v2-name {
-  font-size: 2.25rem;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 1.1rem;
+  font-size: 1.85rem;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
 }
 .v2 .v2-role {
   font-style: italic;
@@ -192,7 +191,7 @@ html.v2-retone .v2 * {
   margin-top: 3.25rem;
   padding-bottom: 1.75rem;
   border-bottom: 1px solid var(--rule);
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 .v2 .v2-nav a {
   color: var(--muted);
@@ -208,14 +207,17 @@ html.v2-retone .v2 * {
   scroll-margin-top: 1.5rem;
 }
 .v2 .v2-sec h2 {
-  font-size: 1.4rem;
+  font-size: 0.8rem;
   line-height: 1.6;
-  letter-spacing: -0.02em;
-  margin-bottom: 1.25rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.4rem;
 }
 .v2-sec > p {
-  font-size: 1.05rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--body);
 }
 .v2-sec > p + p {
   margin-top: 1.15rem;
@@ -246,9 +248,9 @@ html.v2-retone .v2 * {
 }
 .w-title {
   font-family: var(--serif);
-  font-size: 1.15rem;
-  line-height: 1.45;
-  letter-spacing: -0.01em;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
@@ -314,8 +316,9 @@ html.v2-retone .v2 * {
 }
 .v2 .w-summary {
   padding-top: 0.8rem;
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--body);
 }
 .w-poster {
   position: relative;

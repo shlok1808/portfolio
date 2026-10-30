@@ -3,7 +3,8 @@
  *
  * A soft tonal field (slowly drifting, domain-warped noise) is drawn with an 8×8 Bayer ordered
  * dither in 3 px dots of faint ink, so dense and empty patches wander across the paper. The
- * cursor leaves only a small, brief trace of dots behind it.
+ * canvas has one pixel per dot and is scaled up crisp, so the shader only runs once per dot.
+ * The cursor leaves only a small, brief trace of dots behind it.
  */
 import { readTheme, onThemeChange, type RGB, type Theme } from '../../lab/lib/theme'
 import type { ArtMount, Lane } from './types'
@@ -16,8 +17,8 @@ void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }`
 
 const FRAG = `#version 300 es
 precision highp float;
-uniform vec2 uRes, uLane;
-uniform float uDpr, uTime, uStrength, uLaneFloor;
+uniform vec2 uGrid, uLane; // grid in dots; lane in CSS px
+uniform float uTime, uStrength, uLaneFloor;
 uniform vec3 uGround, uInk;
 uniform vec3 uTrail[${TRAIL}]; // x, y (css px), weight
 out vec4 o;
@@ -37,9 +38,8 @@ float bayer4(vec2 a){ return bayer2(0.5 * a) * 0.25 + bayer2(a); }
 float bayer8(vec2 a){ return bayer4(0.5 * a) * 0.25 + bayer2(a); }
 
 void main(){
-  // one dot = 3 CSS px, evaluated at its centre so the dots stay crisp
-  vec2 fc = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y) / uDpr;
-  vec2 cell = floor(fc / 3.0);
+  // one fragment = one 3 CSS px dot, counted from the top-left
+  vec2 cell = vec2(floor(gl_FragCoord.x), uGrid.y - 1.0 - floor(gl_FragCoord.y));
   vec2 p = (cell + 0.5) * 3.0;
 
   vec2 q = p * 0.0019;
@@ -54,9 +54,7 @@ void main(){
   }
 
   float on = step(bayer8(cell) + 0.001, clamp(v, 0.0, 1.0));
-  float x = gl_FragCoord.x;
-  float inLane = smoothstep(uLane.x - 140.0 * uDpr, uLane.x + 40.0 * uDpr, x)
-               * (1.0 - smoothstep(uLane.y - 40.0 * uDpr, uLane.y + 140.0 * uDpr, x));
+  float inLane = smoothstep(uLane.x - 140.0, uLane.x + 40.0, p.x) * (1.0 - smoothstep(uLane.y - 40.0, uLane.y + 140.0, p.x));
   float k = 1.0 - inLane * (1.0 - uLaneFloor);
   o = vec4(mix(uGround, uInk, on * uStrength * k), 1.0);
 }`
@@ -93,9 +91,8 @@ export const mount: ArtMount = (host) => {
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
   const U = (n: string) => gl.getUniformLocation(prog, n)
   const u = {
-    res: U('uRes'),
+    grid: U('uGrid'),
     lane: U('uLane'),
-    dpr: U('uDpr'),
     time: U('uTime'),
     strength: U('uStrength'),
     laneFloor: U('uLaneFloor'),
@@ -104,17 +101,12 @@ export const mount: ArtMount = (host) => {
     trail: U('uTrail'),
   }
 
-  let W = 1
-  let H = 1
-  let dpr = 1
   const build = () => {
-    W = Math.max(1, host.clientWidth)
-    H = Math.max(1, host.clientHeight)
-    dpr = Math.min(window.devicePixelRatio || 1, 2)
-    canvas.width = Math.round(W * dpr)
-    canvas.height = Math.round(H * dpr)
-    canvas.style.width = `${W}px`
-    canvas.style.height = `${H}px`
+    // the host fills the viewport; fall back to the window if it hasn't been laid out yet
+    canvas.width = Math.ceil((host.clientWidth || window.innerWidth) / 3)
+    canvas.height = Math.ceil((host.clientHeight || window.innerHeight) / 3)
+    canvas.style.width = `${canvas.width * 3}px`
+    canvas.style.height = `${canvas.height * 3}px`
   }
 
   let theme: Theme = readTheme()
@@ -140,9 +132,8 @@ export const mount: ArtMount = (host) => {
     trail.fill(0)
     pts.forEach((p, i) => trail.set([p.x, p.y, p.w], i * 3))
     gl.viewport(0, 0, canvas.width, canvas.height)
-    gl.uniform2f(u.res, canvas.width, canvas.height)
-    gl.uniform2f(u.lane, lane.left * dpr, lane.right * dpr)
-    gl.uniform1f(u.dpr, dpr)
+    gl.uniform2f(u.grid, canvas.width, canvas.height)
+    gl.uniform2f(u.lane, lane.left, lane.right)
     gl.uniform1f(u.time, t)
     gl.uniform1f(u.strength, dark ? 0.2 : 0.14)
     gl.uniform1f(u.laneFloor, 0.4)
@@ -182,6 +173,7 @@ export const mount: ArtMount = (host) => {
       draw(time)
     }, 120)
   }
+  const ro = new ResizeObserver(onResize)
   const onVis = () => {
     hidden = document.hidden
     prev = performance.now()
@@ -195,7 +187,7 @@ export const mount: ArtMount = (host) => {
   })
   if (!reduced) window.addEventListener('pointermove', onMove, { passive: true })
   document.addEventListener('visibilitychange', onVis)
-  window.addEventListener('resize', onResize)
+  ro.observe(host)
   if (!reduced) raf = requestAnimationFrame(frame)
 
   return {
@@ -205,7 +197,7 @@ export const mount: ArtMount = (host) => {
       offTheme()
       window.removeEventListener('pointermove', onMove)
       document.removeEventListener('visibilitychange', onVis)
-      window.removeEventListener('resize', onResize)
+      ro.disconnect()
       gl.getExtension('WEBGL_lose_context')?.loseContext()
       canvas.remove()
     },
