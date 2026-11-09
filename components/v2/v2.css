@@ -4,24 +4,24 @@
    keep their own styles.
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* ── Light (cream) and dark (cocoa, a mid-dark, never black) ─────────────────── */
+/* ── Light (cream) and dark (charcoal, cream type) ─────────────────── */
 html:root[data-palette='v2-cream'][data-mode='light'] {
-  --ground: #f3ede2;
+  --ground: #f7f2e9;
   --ink: #221d18;
-  --body: #686157;
-  --muted: #7a7064;
-  --rule: #e0d6c5;
-  --accent: #a4492a;
+  --body: #5f584f;
+  --muted: #776d61;
+  --rule: color-mix(in srgb, #221d18 12%, transparent);
+  --accent: #b0502e;
   --accent-strong: #7d3419;
   color-scheme: light;
 }
 html:root[data-palette='v2-cream'][data-mode='dark'] {
-  --ground: #332c26;
-  --ink: #f1e8da;
-  --body: #c9bead;
-  --muted: #b6a895;
-  --rule: #4a4038;
-  --accent: #eaa57c;
+  --ground: #191918;
+  --ink: #f0ece4;
+  --body: #cfcac1;
+  --muted: #a8a39a;
+  --rule: color-mix(in srgb, #f0ece4 13%, transparent);
+  --accent: #eba47c;
   --accent-strong: #f6c3a2;
   color-scheme: dark;
 }
@@ -436,4 +436,65 @@ html.v2-retone .v2 * {
   .v2 *::after {
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── PREVIEW: background switcher (remove once a background is picked) ─────── */
+.v2-bgpick {
+  position: fixed;
+  left: 50%;
+  bottom: 1.1rem;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.15rem;
+  max-width: calc(100% - 2rem);
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ground) 82%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 0 1px var(--rule), 0 6px 24px color-mix(in srgb, var(--ink) 10%, transparent);
+  font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+}
+.v2-bgpick button {
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.v2-bgpick button:hover {
+  color: var(--ink);
+}
+.v2-bgpick button[aria-pressed='true'] {
+  color: var(--ground);
+  background: var(--ink);
+}
+.v2-bgpick b {
+  font-weight: 400;
+  opacity: 0.55;
+  margin-right: 0.15rem;
+}
+
+/* ── Sunset background: cream type on the dusk sky, whatever the light/dark setting ── */
+html:root[data-palette='v2-cream'][data-bg='sunset'] {
+  --ground: #100d0d;
+  --ink: #f6eee2;
+  --body: #e6dccd;
+  --muted: #cbbfae;
+  --rule: color-mix(in srgb, #f6eee2 18%, transparent);
+  --accent: #ffb27e;
+  --accent-strong: #ffd2b0;
+  color-scheme: dark;
+}
+html:root[data-bg='sunset'] body {
+  background: #100d0d;
+}
+html:root[data-bg='sunset'] .v2-page {
+  text-shadow: 0 1px 14px rgb(8 10 20 / 0.35);
 }

@@ -7,7 +7,7 @@ type Mode = 'light' | 'dark'
 const read = (): Mode => (document.documentElement.getAttribute('data-mode') === 'dark' ? 'dark' : 'light')
 
 /**
- * Light and dark. The first visit follows the system setting (see the pre-paint script in
+ * Light and dark. Every first visit starts in light (see the pre-paint script in
  * app/layout.tsx); choosing here is remembered.
  */
 export function ModeToggle() {
