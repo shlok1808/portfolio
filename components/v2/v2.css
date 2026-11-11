@@ -7,9 +7,9 @@
 /* ── Light (cream) and dark (charcoal, cream type) ─────────────────── */
 html:root[data-palette='v2-cream'][data-mode='light'] {
   --ground: #f7f2e9;
-  --ink: #221d18;
-  --body: #48413a;
-  --muted: #675e53;
+  --ink: #15110d;
+  --body: #2c2722;
+  --muted: #4a433b;
   --rule: color-mix(in srgb, #221d18 12%, transparent);
   --accent: #b0502e;
   --accent-strong: #7d3419;
@@ -24,6 +24,11 @@ html:root[data-palette='v2-cream'][data-mode='dark'] {
   --accent: #eba47c;
   --accent-strong: #f6c3a2;
   color-scheme: dark;
+}
+
+/* the same sky as the contour shader, so the page does not flash cream before the canvas fades in */
+html:root[data-palette='v2-cream'][data-mode='light'] body {
+  background: linear-gradient(180deg, #8fd3f0 0%, #b8e2ee 40%, #dbe9d8 72%, #f4edc6 100%) fixed;
 }
 
 /* no paper grain from globals.css here: its fixed blended layer is re-composited on every scroll

@@ -36,7 +36,7 @@ const FRAG = `#version 300 es
 precision highp float;
 uniform vec2 uGrid, uLane;
 uniform float uTime, uStrength, uLaneFloor, uScroll, uAccentStrength;
-uniform int uMode;
+uniform int uMode, uSky;
 uniform vec3 uGround, uInk, uAccent;
 uniform vec4 uTrail[${TRAIL}]; // x, y (css px), weight, age (s)
 uniform float uDev[${BANDS}];
@@ -153,10 +153,20 @@ void main(){
   }
 
   float on = step(th + 0.001, clamp(v, 0.0, 1.0));
+  // no stray dither dots in the empty ground: only the lines themselves are inked
+  on *= step(0.02, v);
   float onA = step(bayer8(cell.yx + vec2(3.0, 5.0)) + 0.001, clamp(va, 0.0, 1.0));
   float inLane = smoothstep(uLane.x - 140.0, uLane.x + 40.0, p.x) * (1.0 - smoothstep(uLane.y - 40.0, uLane.y + 140.0, p.x));
   float k = 1.0 - inLane * (1.0 - uLaneFloor);
-  vec3 col = mix(uGround, uAccent, onA * uAccentStrength * k);
+  // light mode: a sky gradient down the screen (sky blue, then pale blue-green, then a soft butter yellow) in place of the flat ground
+  vec3 g = uGround;
+  if (uSky == 1) {
+    float y = clamp(p.y / (uGrid.y * 3.0), 0.0, 1.0);
+    vec3 s0 = vec3(0.561, 0.827, 0.941), s1 = vec3(0.722, 0.886, 0.933);
+    vec3 s2 = vec3(0.859, 0.914, 0.847), s3 = vec3(0.957, 0.929, 0.776);
+    g = y < 0.4 ? mix(s0, s1, y / 0.4) : y < 0.72 ? mix(s1, s2, (y - 0.4) / 0.32) : mix(s2, s3, (y - 0.72) / 0.28);
+  }
+  vec3 col = mix(g, uAccent, onA * uAccentStrength * k);
   col = mix(col, uInk, on * uStrength * k);
   o = vec4(col, 1.0);
 }`
@@ -197,7 +207,7 @@ export const mount = (host: HTMLElement, initial: VariantId = 'original'): Varia
   const u = {
     grid: U('uGrid'), lane: U('uLane'), time: U('uTime'), strength: U('uStrength'),
     laneFloor: U('uLaneFloor'), scroll: U('uScroll'), accentStrength: U('uAccentStrength'),
-    mode: U('uMode'), ground: U('uGround'), ink: U('uInk'), accent: U('uAccent'),
+    mode: U('uMode'), sky: U('uSky'), ground: U('uGround'), ink: U('uInk'), accent: U('uAccent'),
     trail: U('uTrail'), dev: U('uDev'),
   }
 
@@ -245,6 +255,7 @@ export const mount = (host: HTMLElement, initial: VariantId = 'original'): Varia
     gl.uniform2f(u.lane, lane.left, lane.right)
     gl.uniform1f(u.time, t)
     gl.uniform1i(u.mode, mode)
+    gl.uniform1i(u.sky, dark ? 0 : 1)
     gl.uniform1f(u.strength, (dark ? 0.2 : 0.14) * (mode === 2 || mode === 3 ? (dark ? 1.15 : 1.5) : 1))
     gl.uniform1f(u.accentStrength, mode === 1 ? (dark ? 0.32 : 0.24) : 0)
     // in dark, light lines on a dark ground pull harder at the eye: keep them fainter behind the text
