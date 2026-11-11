@@ -34,29 +34,29 @@ export function Portfolio() {
           <section id="about" className="v2-sec">
             <h2>About</h2>
             <p>
-              I’m an undergraduate in Applied Data Science at Penn State, working on mechanistic interpretability with{' '}
+              I’m an Applied Data Science undergrad at Penn State, and I work on mechanistic interpretability with{' '}
               <a href="https://louise-lulin.github.io/" {...ext}>
                 Dr. Lu Lin
               </a>{' '}
-              at the College of IST. I switched to data science from engineering after watching one of Neel Nanda’s
-              videos on{' '}
+              at the College of IST. I actually started out in engineering. Then I watched one of Neel Nanda’s videos
+              on{' '}
               <a href="https://www.anthropic.com/research/team/interpretability" {...ext}>
                 interpretability
               </a>
-              .
+              , and that’s what got me to switch.
             </p>
             <p>
-              I think interpretability should be judged by what it lets us do. A finding about a model’s internals
-              matters most when it supports a concrete decision or intervention outside interpretability, and when that
-              action is actually tested: against simple baselines like prompting or fine-tuning, across models and
-              seeds, on realistic data. I try to hold my own work to that standard, and I agree with the case made in{' '}
+              The question I keep coming back to is simple: does looking inside a model actually help us do something?
+              If we find something in a model’s internals, I want to know if it leads to a real decision or fix. And I
+              want that fix tested properly, against the easy options like just prompting or fine-tuning, across
+              different models and seeds, on realistic data. That’s the bar I try to hold my own work to.{' '}
               <a href="https://actionable-interpretability-guide.github.io/paper.pdf" {...ext}>
                 Interpretability Can Be Actionable
-              </a>
-              .
+              </a>{' '}
+              makes this case really well.
             </p>
             <p className="v2-quiet">
-              Outside research: music, bullet chess, poker, pickleball, badminton, and{' '}
+              When I’m not doing research, I’m into music, bullet chess, poker, pickleball, badminton, and{' '}
               <a href="/photography">astrophotography</a>.
             </p>
           </section>
