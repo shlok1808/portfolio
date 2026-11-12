@@ -108,7 +108,7 @@ export function Portfolio() {
               <li>
                 <span>Chess</span>
                 <a href="https://www.chess.com/member/andrej_karpathys_hair" {...ext}>
-                  andrej_karpathys_hair
+                  I like playing bullet chess
                 </a>
               </li>
             </ul>
