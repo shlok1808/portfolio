@@ -38,7 +38,7 @@ export function Portfolio() {
               <a href="https://louise-lulin.github.io/" {...ext}>
                 Dr. Lu Lin
               </a>{' '}
-              at the College of IST. Before that, I worked with{' '}
+              at the College of IST. Before that, I was very lucky to work with{' '}
               <a href="https://girishgupta.com/" {...ext}>
                 Girish Gupta
               </a>
