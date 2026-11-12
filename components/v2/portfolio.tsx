@@ -46,12 +46,7 @@ export function Portfolio() {
               <a href="https://www.redwoodresearch.org/" {...ext}>
                 Redwood Research
               </a>{' '}
-              and who first introduced me to interpretability and safety. I actually started out in engineering. Then I watched one of Neel Nanda’s videos
-              on{' '}
-              <a href="https://www.anthropic.com/research/team/interpretability" {...ext}>
-                interpretability
-              </a>
-              , and that’s what got me to switch.
+              and who first introduced me to interpretability and safety.
             </p>
             <p>
               The question I keep coming back to is simple: does looking inside a model actually help us do something?
