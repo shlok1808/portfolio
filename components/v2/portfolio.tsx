@@ -46,7 +46,7 @@ export function Portfolio() {
               <a href="https://www.redwoodresearch.org/" {...ext}>
                 Redwood Research
               </a>{' '}
-              and who first introduced me to interpretability and safety.
+              and who guided me through my first interpretability and safety research project.
             </p>
             <p>
               The question I keep coming back to is simple: does looking inside a model actually help us do something?
