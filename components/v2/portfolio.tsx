@@ -61,8 +61,8 @@ export function Portfolio() {
               <a href="/photography">astrophotography</a>.
             </p>
             <p>
-              I’m always keen to collaborate on interpretability or safety research, so feel free to{' '}
-              <a href="#contact">reach out</a>.
+              Always happy to collaborate on interpretability or safety research, so{' '}
+              <a href="#contact">reach out</a>!
             </p>
           </section>
 
