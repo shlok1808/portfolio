@@ -55,12 +55,7 @@ export function Portfolio() {
             </p>
             <p>
               The question I keep coming back to is simple: does looking inside a model actually help us do something?
-              If we find something in a model’s internals, I want to know if it leads to a real decision or fix. And I
-              think a finding only really counts if it survives an intervention. If you say you’ve found where a model
-              stores a fact or decides to refuse, you should be able to patch or edit that spot and watch the behavior
-              change the way you predicted. And that edit should beat what you’d get from just prompting or
-              fine-tuning, otherwise the mechanism isn’t telling you anything new. That’s the bar I try to hold my own
-              work to.{' '}
+              To me, a finding only counts if you can intervene on it and it beats just prompting or fine-tuning.{' '}
               <a href="https://actionable-interpretability-guide.github.io/paper.pdf" {...ext}>
                 Interpretability Can Be Actionable
               </a>{' '}
