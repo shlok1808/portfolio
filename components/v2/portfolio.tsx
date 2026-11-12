@@ -38,7 +38,15 @@ export function Portfolio() {
               <a href="https://louise-lulin.github.io/" {...ext}>
                 Dr. Lu Lin
               </a>{' '}
-              at the College of IST. I actually started out in engineering. Then I watched one of Neel Nanda’s videos
+              at the College of IST. Before that, I worked with{' '}
+              <a href="https://girishgupta.com/" {...ext}>
+                Girish Gupta
+              </a>
+              , who’s now at{' '}
+              <a href="https://www.redwoodresearch.org/" {...ext}>
+                Redwood Research
+              </a>
+              . I actually started out in engineering. Then I watched one of Neel Nanda’s videos
               on{' '}
               <a href="https://www.anthropic.com/research/team/interpretability" {...ext}>
                 interpretability
@@ -48,8 +56,11 @@ export function Portfolio() {
             <p>
               The question I keep coming back to is simple: does looking inside a model actually help us do something?
               If we find something in a model’s internals, I want to know if it leads to a real decision or fix. And I
-              want that fix tested properly, against the easy options like just prompting or fine-tuning, across
-              different models and seeds, on realistic data. That’s the bar I try to hold my own work to.{' '}
+              think a finding only really counts if it survives an intervention. If you say you’ve found where a model
+              stores a fact or decides to refuse, you should be able to patch or edit that spot and watch the behavior
+              change the way you predicted. And that edit should beat what you’d get from just prompting or
+              fine-tuning, otherwise the mechanism isn’t telling you anything new. That’s the bar I try to hold my own
+              work to.{' '}
               <a href="https://actionable-interpretability-guide.github.io/paper.pdf" {...ext}>
                 Interpretability Can Be Actionable
               </a>{' '}
